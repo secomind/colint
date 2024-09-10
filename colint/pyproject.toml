@@ -1,0 +1,73 @@
+[tool.flake8]
+# needs to be coherent with black settings
+exclude = [
+    ".git",
+    "__pycache__",
+    "venv",
+    "lint_env",
+    "env",
+    "docs",
+    "notebooks",
+    "poc_materials",
+    ".buildozer",
+    ".env",
+    ".venv"
+]
+
+extend-ignore = [
+    # Styling rules already handled by black
+    "E1",
+    "W1",
+    "E2",
+    "W2",
+    "E3",
+    "W3",
+    "E5",
+    "W5",
+    # Conflicts with regexes
+    "W605",
+    # Rule too strict (no lambdas)
+    "E731"
+]
+
+per-file-ignores = '''
+    __init__.py:F401
+    setup.py:E121
+'''
+
+[tool.isort]
+profile = "black"
+skip_glob = ["*/venv/*", "*/env/*", "*/docs/*", "*/lint_env/*", "*/.venv/*"]
+
+
+[tool.black]
+line-length = 120
+exclude = '''
+    lint_env\/|venv\/|env\/|docs\/|notebooks\/|poc\_materials\/|\.buildozer\/|.venv\/|.env\/
+'''
+preview = true
+
+[tool.vulture]
+exclude = [
+    "*/__pycache__/*",
+    "*/venv/*",
+    "*/.venv/*",
+    "*/lint_env/*",
+    "*/env/*",
+    "*/.env/*",
+    "*/docs/*",
+]
+
+[tool.mypy]
+python_version = "3.10"
+
+[[tool.mypy.overrides]]
+module = [
+    "sqlalchemy",
+    "sqlalchemy.*",
+    "sendgrid.*",
+    "dotenv",
+    "google.*",
+    "flask"
+]
+ignore_missing_imports = true
