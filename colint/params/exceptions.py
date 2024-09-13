@@ -26,3 +26,9 @@ class InvalidFlake8PerFileIgnore(Exception):
     """
     Exception raised when an invalid per-file-ignore string is found in the TOML file.
     """
+
+
+class BlackConfigNotFound(Exception):
+    """
+    Exception raised when valid flake8 configurations are not found in a TOML file.
+    """
