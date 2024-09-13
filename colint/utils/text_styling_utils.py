@@ -9,19 +9,19 @@ class TextModifiers:
     INVERSE = 44  # swap background & text color
 
 
-def format_text(text: str, codes: int | list[int]) -> str:
+def style_text(text: str, codes: int | list[int]) -> str:
     """
-    Returns a formatted version of the input text. Automatically includes an end formatting character
+    Returns a styled version of the input text. Automatically includes an end styling character
     at the end of the string.
 
     Parameters:
-    text (str): The text to be formatted
-    codes (int | list[int]): formatting codes to be used in the text.
+    text (str): The text to be styled
+    codes (int | list[int]): styling codes to be used in the text.
                              Refer to TextModifiers for the useful codes.
                              if a list is passed all modifiers are applied
 
     Returns:
-    formatted_text: the formatted text
+    styled_text: the styled text
     """
     if isinstance(codes, int):
         codes = [codes]

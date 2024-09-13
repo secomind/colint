@@ -6,16 +6,16 @@ import isort
 from ..params.isort_params import IsortParams
 from ..utils.jupyter_utils import JupyterNotebokParser
 from ..utils.os_utils import get_valid_files
-from ..utils.text_formatting_utils import TextModifiers, format_text
+from ..utils.text_styling_utils import TextModifiers, style_text
 
 FILE_SORTED_MESSAGE = "! File has been sorted: "
 FILE_NOT_SORTED_MESSAGE = "! File has not been sorted: "
 
 
 def generate_message(f: Path, only_check: bool) -> str:
-    formatted_filename = format_text(str(f.resolve()), TextModifiers.BOLD)
+    formatted_filename = style_text(str(f.resolve()), TextModifiers.BOLD)
     if only_check:
-        return format_text(FILE_NOT_SORTED_MESSAGE, TextModifiers.ERROR) + formatted_filename
+        return style_text(FILE_NOT_SORTED_MESSAGE, TextModifiers.ERROR) + formatted_filename
     return FILE_SORTED_MESSAGE + formatted_filename
 
 

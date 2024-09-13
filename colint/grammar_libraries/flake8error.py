@@ -1,11 +1,11 @@
 from pathlib import Path
 
-from ..utils.text_formatting_utils import TextModifiers, format_text
+from ..utils.text_styling_utils import TextModifiers, style_text
 
 
 class Flake8Error:
     """
-    A class to represent a Flake8 error and provide methods for formatting
+    A class to represent a Flake8 error and provide methods for syling
     and determining if it should be ignored.
 
     Attributes:
@@ -32,19 +32,19 @@ class Flake8Error:
 
     def to_str(self) -> str:
         """
-        Convert the Flake8Error instance to a formatted string.
+        Convert the Flake8Error instance to a styled string.
 
         Returns:
-            str: A string representation of the Flake8 error with formatting.
+            str: A string representation of the Flake8 error with styling.
         """
-        cell_format_list = []
+        cell_style_list = []
         if self.cell_number:
-            cell_format_list = [format_text(f"Cell{self.cell_number}", TextModifiers.INVERSE)]
-        path_formatted = ":".join(
-            [str(Path(self.filename).resolve())] + cell_format_list + [str(self.line_number), str(self.col_number)]
+            cell_style_list = [style_text(f"Cell{self.cell_number}", TextModifiers.INVERSE)]
+        path_styled = ":".join(
+            [str(Path(self.filename).resolve())] + cell_style_list + [str(self.line_number), str(self.col_number)]
         )
-        code_formatted = format_text(self.code, [TextModifiers.ERROR, TextModifiers.BOLD])
-        return f"{code_formatted} {path_formatted} - {self.message}"
+        code_styled = style_text(self.code, [TextModifiers.ERROR, TextModifiers.BOLD])
+        return f"{code_styled} {path_styled} - {self.message}"
 
     def should_be_ignored(self, ignore: list[str] = [], per_file_ignores: dict[str, list[str]] = {}) -> bool:
         """
