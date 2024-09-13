@@ -27,13 +27,16 @@ extend-ignore = [
     # Conflicts with regexes
     "W605",
     # Rule too strict (no lambdas)
-    "E731"
+    "E731",
+    "E402"
 ]
 
 per-file-ignores = '''
     __init__.py:F401
     setup.py:E121
 '''
+
+max-complexity = 2
 
 [tool.isort]
 profile = "black"
