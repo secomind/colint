@@ -29,6 +29,7 @@ class JupyterCell:
         __cell_type (str): The type of the cell ('code', 'markdown', 'raw').
         __lines (list[str]): The source code/text of the cell.
         __outputs (list[dict]): The outputs of the cell if it's a code cell.
+        __execution_count (int or None): The execution count of the cell if it's a code cell.
         __metadata (dict): Additional metadata for the cell.
     """
 
@@ -50,12 +51,15 @@ class JupyterCell:
             self.__lines = cell_data["source"]
         except KeyError:
             raise InvalidJupyterCellData("Invalid cell found")
+        self.__outputs = []
+        self.__execution_count = None
         if self.__cell_type == "code":
             try:
                 self.__outputs = cell_data["outputs"]
+                self.__execution_count = cell_data.get("execution_count")
             except KeyError:
                 raise InvalidJupyterCellData("Invalid cell found")
-        self.__metadata = delete_from_dict_if_exists(cell_data, ["cell_type", "source", "outputs"])
+        self.__metadata = delete_from_dict_if_exists(cell_data, ["cell_type", "source", "outputs", "execution_count"])
 
     @property
     def text(self):
@@ -90,12 +94,22 @@ class JupyterCell:
     @property
     def size(self):
         """
-        Get the number of lines in a cell.
+        Get the number of lines in the cell.
 
         Returns:
             int: The number of lines in the cell.
         """
         return len(self.__lines)
+
+    @property
+    def execution_count(self):
+        """
+        Get the execution count of the cell.
+
+        Returns:
+            int or None: The execution count of the cell if it's a code cell, otherwise None.
+        """
+        return self.__execution_count
 
     def has_code(self) -> bool:
         """
@@ -108,20 +122,28 @@ class JupyterCell:
             return False
         return any([len(line.strip()) > 0 and not line.strip().startswith("#") for line in self.__lines])
 
-    def has_output(self) -> bool:
+    def has_output(self, picky: bool = False) -> bool:
         """
         Check if the cell has any outputs.
+
+        Args:
+            picky (bool): Whether to consider a non-null execution count as an output. Defaults to False.
 
         Returns:
             bool: True if there are outputs, False otherwise.
         """
-        return len(self.__outputs) > 0
+        return (len(self.__outputs) > 0) or (picky and self.__execution_count is not None)
 
-    def clear_output(self):
+    def clear_output(self, reset_execution_count: bool = False):
         """
         Clear all outputs from the cell.
+
+        Args:
+            reset_execution_count (bool): Whether to reset the execution count to None. Defaults to False.
         """
         self.__outputs = []
+        if reset_execution_count:
+            self.__execution_count = None
 
     def to_dict(self) -> dict:
         """
@@ -135,6 +157,7 @@ class JupyterCell:
         res["source"] = self.__lines
         if self.__cell_type == "code":
             res["outputs"] = self.__outputs
+            res["execution_count"] = self.__execution_count
         return res
 
 
