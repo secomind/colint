@@ -118,8 +118,6 @@ def code_check(path: str, params: Flake8Params) -> bool:
     for nb_file in jupyter_notebooks:
         errors += __code_check_jupyter_notebook(style_guide, nb_file)
 
-    print({error.code for error in errors}, len(errors))
-
     errors = [
         error
         for error in errors

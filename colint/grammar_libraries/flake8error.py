@@ -69,5 +69,9 @@ class Flake8Error:
 
         if basename in per_file_ignores:
             to_ignore += per_file_ignores[basename]
+        
+        # ignore docstring errors if it is a jupyter notebook
+        if basename.endswith(".ipynb"):
+            to_ignore.append("D") 
 
         return any([self.code.startswith(ignored_code) for ignored_code in to_ignore])
