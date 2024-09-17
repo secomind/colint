@@ -6,17 +6,17 @@ import isort
 from ..params.isort_params import IsortParams
 from ..utils.jupyter_utils import JupyterNotebokParser
 from ..utils.os_utils import get_valid_files
-from ..utils.text_formatting_utils import TextModifiers, format_text
+from ..utils.text_styling_utils import TextModifiers, style_text
 
 FILE_SORTED_MESSAGE = "! File has been sorted: "
 FILE_NOT_SORTED_MESSAGE = "! File has not been sorted: "
 
 
-def generate_message(f: Path, only_check: bool) -> str:
-    formatted_filename = format_text(str(f.resolve()), TextModifiers.BOLD)
+def __style_message(f: Path, only_check: bool) -> str:
+    styled_fname = style_text(str(f.resolve()), TextModifiers.BOLD)
     if only_check:
-        return format_text(FILE_NOT_SORTED_MESSAGE, TextModifiers.ERROR) + formatted_filename
-    return FILE_SORTED_MESSAGE + formatted_filename
+        return style_text(FILE_NOT_SORTED_MESSAGE, TextModifiers.ERROR) + styled_fname
+    return FILE_SORTED_MESSAGE + styled_fname
 
 
 def __isort_text(text: str, params: IsortParams) -> tuple[str, bool]:
@@ -104,13 +104,13 @@ def sort_imports(path: str, only_check: bool, params: IsortParams) -> bool:
             file_not_linted = isort.file(f, profile=params.profile)
         some_file_has_been_sorted = some_file_has_been_sorted or file_not_linted
         if file_not_linted:
-            print(generate_message(f, only_check))
+            print(__style_message(f, only_check))
 
     # Process Jupyter notebook files
     for f in notebook_files:
         file_not_linted = __isort_jupyter_notebook(str(f), only_check, params)
         some_file_has_been_sorted = some_file_has_been_sorted or file_not_linted
         if file_not_linted:
-            print(generate_message(f, only_check))
+            print(__style_message(f, only_check))
 
     return some_file_has_been_sorted

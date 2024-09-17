@@ -2,25 +2,25 @@ from pathlib import Path
 
 from ..utils.jupyter_utils import JupyterNotebokParser
 from ..utils.os_utils import get_valid_files
-from ..utils.text_formatting_utils import TextModifiers, format_text
+from ..utils.text_styling_utils import TextModifiers, style_text
 
 
-def __format_text(fname: str | Path, only_check: bool) -> str:
+def __style_text(fname: str | Path, only_check: bool) -> str:
     """
-    Format the file name for display.
+    Styles the file name for display.
 
     Args:
         fname (str | Path): The name or path of the file.
         only_check (bool): If True, returns a message indicating the file hasn't been cleared of outputs. Otherwise, indicates the file has been cleared.
 
     Returns:
-        str: A formatted string indicating the status of the file's outputs.
+        str: A styled string indicating the status of the file's outputs.
     """
-    formatted_fname = format_text(str(Path(fname).resolve()), TextModifiers.BOLD)
+    styled_fname = style_text(str(Path(fname).resolve()), TextModifiers.BOLD)
 
     if only_check:
-        return f"{formatted_fname}: has not been cleared of its outputs."
-    return f"{formatted_fname}: has been cleared of its outputs."
+        return f"{styled_fname}: has not been cleared of its outputs."
+    return f"{styled_fname}: has been cleared of its outputs."
 
 
 def __clean_notebook(fname: str | Path, only_check: bool) -> bool:
@@ -65,5 +65,5 @@ def jupyter_clean(path: str, only_check: bool) -> bool:
         nb_modified = __clean_notebook(fname_nb, only_check)
         if nb_modified:
             modified = True
-            print(__format_text(fname_nb, only_check))
+            print(__style_text(fname_nb, only_check))
     return modified
