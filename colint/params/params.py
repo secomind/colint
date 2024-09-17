@@ -3,7 +3,9 @@ from pathlib import Path
 
 import toml
 
+from .black_params import BlackParams
 from .exceptions import (
+    BlackConfigNotFound,
     Flake8ConfigNotFound,
     IsortConfigNotFound,
     TomlNotFound,
@@ -25,6 +27,7 @@ class Params:
 
     isort: IsortParams
     flake8: Flake8Params
+    black: BlackParams
 
     @staticmethod
     def from_toml(toml_path: Path) -> "Params":
@@ -56,5 +59,11 @@ class Params:
             raise IsortConfigNotFound(f"{toml_path} does not contain isort configurations.")
         if "flake8" not in data.keys():
             raise Flake8ConfigNotFound(f"{toml_path} does not contain flaek8 configurations.")
+        if "black" not in data.keys():
+            raise BlackConfigNotFound(f"{toml_path} does not contain black configurations.")
 
-        return Params(isort=IsortParams.from_dict(data["isort"]), flake8=Flake8Params.from_dict(data["flake8"]))
+        return Params(
+            isort=IsortParams.from_dict(data["isort"]),
+            flake8=Flake8Params.from_dict(data["flake8"]),
+            black=BlackParams.from_dict(data["black"]),
+        )
