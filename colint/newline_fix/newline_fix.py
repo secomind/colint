@@ -17,9 +17,11 @@ def newline_fix(path: str, only_check: bool = False):
     modified = False
     for fname in files:
         with Path(fname).open("rb+") as f:
-            f.seek(-1, 2)
-            last_byte = f.read(1)
-
+            try:
+                f.seek(-1, 2)
+                last_byte = f.read(1)
+            except OSError:  # OSError is raised if file is empty
+                continue  # if file is empty, ignore file.
             newline_missing = last_byte != b"\n"
 
             modified |= newline_missing

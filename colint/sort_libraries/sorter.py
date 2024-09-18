@@ -99,9 +99,19 @@ def sort_imports(path: str, only_check: bool, params: IsortParams) -> bool:
     # Process Python files
     for f in script_files:
         if only_check:
-            file_not_linted = isort.check_file(f, profile=params.profile)
+            file_not_linted = not isort.check_file(
+                f,
+                profile=params.profile,
+                format_error="\033[F",
+                format_success="\033[F",
+            )
         else:
-            file_not_linted = isort.file(f, profile=params.profile)
+            file_not_linted = isort.file(
+                f,
+                profile=params.profile,
+                format_error="\033[F",
+                format_success="\033[F",
+            )
         some_file_has_been_sorted = some_file_has_been_sorted or file_not_linted
         if file_not_linted:
             print(__style_message(f, only_check))
