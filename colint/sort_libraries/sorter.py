@@ -36,7 +36,9 @@ def __isort_text(text: str, params: IsortParams) -> tuple[str, bool]:
     output_byte_stream = io.BytesIO()
     output_text_stream = io.TextIOWrapper(output_byte_stream, encoding="utf-8")
 
-    has_been_sorted = isort.stream(input_text_stream, output_text_stream, profile=params.profile)
+    has_been_sorted = isort.stream(
+        input_text_stream, output_text_stream, profile=params.profile
+    )
 
     # Retrieve the sorted text from the output stream
     output_text_stream.seek(0)
@@ -94,14 +96,26 @@ def sort_imports(path: str, only_check: bool, params: IsortParams) -> bool:
 
     # Filter out Python and Jupyter notebook files
     script_files = [Path(f) for f in files if f.endswith(".py") and Path(f).is_file()]
-    notebook_files = [Path(f) for f in files if f.endswith(".ipynb") and Path(f).is_file()]
+    notebook_files = [
+        Path(f) for f in files if f.endswith(".ipynb") and Path(f).is_file()
+    ]
 
     # Process Python files
     for f in script_files:
         if only_check:
-            file_not_linted = isort.check_file(f, profile=params.profile)
+            file_not_linted = not isort.check_file(
+                f,
+                profile=params.profile,
+                format_error="\033[F",
+                format_success="\033[F",
+            )
         else:
-            file_not_linted = isort.file(f, profile=params.profile)
+            file_not_linted = isort.file(
+                f,
+                profile=params.profile,
+                format_error="\033[F",
+                format_success="\033[F",
+            )
         some_file_has_been_sorted = some_file_has_been_sorted or file_not_linted
         if file_not_linted:
             print(__style_message(f, only_check))
