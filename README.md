@@ -1,57 +1,114 @@
-# Colint
+# Collaborative Lint (COLINT)
 
-Colint is a command-line utility designed to streamline code formatting and linting for Python projects. It integrates popular tools like `Black`, `Flake8`, and `isort` to help you maintain clean and consistent code with ease.
+This repository defines a robust linter for maintaining high-quality code standards across our project. 
+Our linter leverages the power of several well-established tools:
 
-## Features
+- **Flake8**: Identifies and reports on various coding errors and stylistic issues.
+- **Black**: Provides consistent code formatting by automatically reformatting code to adhere to standard style guides.
+- **isort**: Ensures that imports are properly sorted and organized within each file.
 
-- **Code Formatting**: Uses [Black](https://black.readthedocs.io/en/stable/) for automatic code formatting.
-- **Linting**: Employs [Flake8](https://flake8.pycqa.org/) to identify and report coding style violations.
-- **Import Sorting**: Utilizes [isort](https://pycqa.github.io/isort/) to sort and organize imports.
-- **Cleaning**: Removes Python bytecode and cache files.
+### Additional Linting Features
+
+In addition to the primary linting utilities, our linter performs the following checks:
+
+- **Newline at End of Files**: Verifies that every file in the project ends with a newline character, ensuring compatibility with various tools and editors.
+- **Cleaned Jupyter Notebooks**: Ensures that all Jupyter notebooks are free from any output or unnecessary metadata, keeping the notebooks lightweight and easy to review.
 
 ## Installation
 
-You can install Colint from your local machine or directly from PyPI once it’s published. For now, you can install it using pip from the local directory:
+Colint can be easily installed via `pip`. 
+However, we **strongly** suggest you install `colint` in a separate environment from your production/development one.
 
-```bash
-pip install .
-```
+### In a venv environment.
+
+- Create a new environment using `venv`, and activate it.
+
+  Example:
+  ```sh
+  python3 -m venv colint_env
+  source colint_env/bin/activate
+  ```
+
+- Install `colint` in the new environment:
+
+  ```sh
+  pip install git+ssh://git@github.com/secomind/colint.git
+  ```
+
+### In a conda environment
+
+- Create and activate a new conda environment.
+
+  Example:
+  ```sh
+  conda create -n colint
+  conda activate colint
+  ```
+
+- Install `git` and `pip` in the new environment.
+  ```sh
+  conda install git pip
+  ```
+
+- Install `colint`
+  ```sh
+  pip install git+ssh://git@github.com/secomind/colint.git
+  ```
 
 ## Usage
-Once installed, you can use Colint to run various tasks. The available commands are:
 
-- `code-format`: Format the code using Black.
-- `flake-lint`: Lint the code using Flake8.
-- `isort`: Sort imports using isort.
-- `lint`: Run all linting tools in sequence (isort, Black, Flake8).
-- `clean`: Remove Python bytecode and cache files.
+The `colint` script provides several commands for maintaining code quality and cleanliness across Python scripts and Jupyter notebooks.
 
-## Running Tasks
-You can run tasks via the command line. Here are examples of how to use each command:
-
-1. Code Formatting:
-```bash
-colint code-format
+```
+usage: colint [-h] [--check] [--clean-notebooks]
+              command
+              path_to_dir
 ```
 
-2. Linting:
-```bash
-colint flake-lint
+### Positional Arguments
+- **command**: Specify the command to execute. Options include:
+  - `sort-libraries`: Sorts and organizes the library imports, it uses the `isort` library.
+  - `code-format`: Formats the code according to defined style guides, it uses the `black` library.
+  - `grammar-check`: Checks for and corrects grammatical/styling errors in code and docstrings, it uses the `flake8` library.
+  - `newline-fix`: Fixes newline inconsistencies in the files.
+  - `clean-jupyter`: Cleans Jupyter notebook files by removing unnecessary metadata and outputs.
+  - `lint`: Performs all the above operations except `clean-jupyter`. To include `clean-jupyter`, use the `--clean-notebooks` flag.
+
+- `path_to_dir`: Provide the path to the directory that needs linting.
+
+### Options
+- `-h`, `--help`: Show an help message and exit.
+- `--check`: Enable check mode.
+  In this mode, linting will not modify files; it will only check for issues.
+- `--clean-notebooks`: Enable clean-notebooks mode.
+  If the lint command is selected, this adds a procedure to clean Jupyter notebooks.
+  If another command is used, this option has no effect.
+
+### Examples
+
+**Lint a Directory**
+```sh
+colint lint /path/to/your/project
 ```
 
-3. Import Sorting:
-```bash
-colint isort
+**Check Code Format Without Modifying Files**
+```sh
+colint code-format /path/to/your/project --check
 ```
 
-4. Run All Linters:
-```bash
-colint lint
+**Sort Libraries in Directory**
+```sh
+colint sort-libraries /path/to/your/project
 ```
 
-5. Clean Up:
-```bash
-colint clean
+**Clean Jupyter Notebooks and Lint**
+```sh
+colint lint /path/to/your/project --clean-notebooks
+```
+
+**Grammar Check**
+```sh
+colint grammar-check /path/to/your/project
 ```
 
 ## Contributing
@@ -59,8 +116,3 @@ Contributions are welcome! Please feel free to open issues or submit pull reques
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
-
-## Acknowledgments
-- [Black](https://black.readthedocs.io/en/stable/) for code formatting.
-- [Flake8](https://flake8.pycqa.org/) for linting.
-- [isort](https://pycqa.github.io/isort/)  for import sorting.
