@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from black import Mode, format_file_contents
+from black.report import NothingChanged
 
 from ..params.black_params import BlackParams
 from ..utils.jupyter_utils import JupyterNotebokParser
@@ -45,6 +46,14 @@ def __style_black_message(fname: str | Path, only_check: bool) -> str:
         return f"{styled_fname}: has been reformatted"
 
 
+def __get_formatted_text(text: str, mode: Mode) -> str:
+    try:
+        formatted_code = format_file_contents(text, fast=True, mode=mode)
+    except NothingChanged:
+        formatted_code = text
+    return formatted_code
+
+
 def format_notebook(nb_path: str | Path, only_check: bool, mode: Mode) -> bool:
     """
     Format the code in a Jupyter notebook using Black.
@@ -61,7 +70,7 @@ def format_notebook(nb_path: str | Path, only_check: bool, mode: Mode) -> bool:
     modified = False
     for cell in nb.code_cells():
         try:
-            formatted_code = format_file_contents(cell.text, fast=True, mode=mode)
+            formatted_code = __get_formatted_text(cell.text, mode=mode)
             modified |= formatted_code != cell.text
             cell.text = formatted_code
         except Exception as e:
@@ -84,7 +93,7 @@ def format_script(input_path: str | Path, only_check: bool, mode: Mode) -> bool:
         bool: True if the script was modified, False otherwise.
     """
     text = Path(input_path).read_text(encoding="utf8")
-    formatted_code = format_file_contents(text, fast=True, mode=mode)
+    formatted_code = __get_formatted_text(text, mode=mode)
     modified = formatted_code != text
     if modified and not only_check:
         Path(input_path).write_text(formatted_code, encoding="utf8")
@@ -107,7 +116,9 @@ def format_code(path: str, only_check: bool, params: BlackParams) -> bool:
     files = get_valid_files(path)
 
     script_files = [Path(f) for f in files if f.endswith(".py") and Path(f).is_file()]
-    notebook_files = [Path(f) for f in files if f.endswith(".ipynb") and Path(f).is_file()]
+    notebook_files = [
+        Path(f) for f in files if f.endswith(".ipynb") and Path(f).is_file()
+    ]
 
     any_file_not_linted = False
 

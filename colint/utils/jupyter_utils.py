@@ -21,6 +21,13 @@ def delete_from_dict_if_exists(d: dict, keys: list[str]):
     return res
 
 
+def safe_json_load(path: Path):
+    text = path.read_text().strip()
+    if len(text) == 0:
+        return None
+    return json.loads(text)
+
+
 class JupyterCell:
     """
     Representation of a Jupyter notebook cell.
@@ -59,7 +66,9 @@ class JupyterCell:
                 self.__execution_count = cell_data.get("execution_count")
             except KeyError:
                 raise InvalidJupyterCellData("Invalid cell found")
-        self.__metadata = delete_from_dict_if_exists(cell_data, ["cell_type", "source", "outputs", "execution_count"])
+        self.__metadata = delete_from_dict_if_exists(
+            cell_data, ["cell_type", "source", "outputs", "execution_count"]
+        )
 
     @property
     def text(self):
@@ -120,7 +129,12 @@ class JupyterCell:
         """
         if self.__cell_type != "code":
             return False
-        return any([len(line.strip()) > 0 and not line.strip().startswith("#") for line in self.__lines])
+        return any(
+            [
+                len(line.strip()) > 0 and not line.strip().startswith("#")
+                for line in self.__lines
+            ]
+        )
 
     def has_output(self, picky: bool = False) -> bool:
         """
@@ -132,7 +146,9 @@ class JupyterCell:
         Returns:
             bool: True if there are outputs, False otherwise.
         """
-        return (len(self.__outputs) > 0) or (picky and self.__execution_count is not None)
+        return (len(self.__outputs) > 0) or (
+            picky and self.__execution_count is not None
+        )
 
     def clear_output(self, reset_execution_count: bool = False):
         """
@@ -184,8 +200,11 @@ class JupyterNotebokParser:
         nb_path = Path(path)
         if not nb_path.is_file():
             raise FileNotFoundError(f"File {str(path)} does not exist.")
-        with nb_path.open("r") as f:
-            data = json.load(f)
+        data = safe_json_load(nb_path)
+        if data is None:
+            self.__cells = []
+            self.__metadata = dict()
+            return
         if "cells" not in data.keys():
             raise InvalidJupyterNotebookData("Cannot found 'cells' in Jupyter data.")
         self.__cells = [JupyterCell(c) for c in data["cells"]]
