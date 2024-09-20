@@ -5,7 +5,7 @@ from black import Mode, format_file_contents
 from ..params.black_params import BlackParams
 from ..utils.jupyter_utils import JupyterNotebokParser
 from ..utils.os_utils import get_valid_files
-from ..utils.text_formatting_utils import TextModifiers, format_text
+from ..utils.text_styling_utils import TextModifiers, style_text
 
 
 def __get_black_mode(params: BlackParams) -> Mode:
@@ -26,23 +26,23 @@ def __get_black_mode(params: BlackParams) -> Mode:
     )
 
 
-def __format_black_message(fname: str | Path, only_check: bool) -> str:
+def __style_black_message(fname: str | Path, only_check: bool) -> str:
     """
-    Format a message indicating whether a file would have been or has been reformatted.
+    Styles a message indicating whether a file would have been or has been reformatted.
 
     Args:
         fname (str | Path): The file name.
         only_check (bool): Whether the formatter is running in "check only" mode.
 
     Returns:
-        str: A formatted message string.
+        str: A styled message string.
     """
-    formatted_fname = format_text(str(Path(fname).resolve()), TextModifiers.BOLD)
+    styled_fname = style_text(str(Path(fname).resolve()), TextModifiers.BOLD)
 
     if only_check:
-        return f"{formatted_fname}: would have been reformatted."
+        return f"{styled_fname}: would have been reformatted."
     else:
-        return f"{formatted_fname}: has been reformatted"
+        return f"{styled_fname}: has been reformatted"
 
 
 def format_notebook(nb_path: str | Path, only_check: bool, mode: Mode) -> bool:
@@ -115,12 +115,12 @@ def format_code(path: str, only_check: bool, params: BlackParams) -> bool:
         modified = format_script(file, only_check, mode)
         any_file_not_linted |= modified
         if modified:
-            print(__format_black_message(file, only_check))
+            print(__style_black_message(file, only_check))
 
     for file in notebook_files:
         modified = format_notebook(file, only_check, mode)
         any_file_not_linted |= modified
         if modified:
-            print(__format_black_message(file, only_check))
+            print(__style_black_message(file, only_check))
 
     return any_file_not_linted

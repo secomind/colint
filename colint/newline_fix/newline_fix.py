@@ -1,15 +1,15 @@
 from pathlib import Path
 
 from ..utils.os_utils import get_valid_files
-from ..utils.text_formatting_utils import TextModifiers, format_text
+from ..utils.text_styling_utils import TextModifiers, style_text
 
 
-def __format_text(fname: str | Path, only_check: bool) -> str:
-    formatted_fname = format_text(str(Path(fname).resolve()), TextModifiers.BOLD)
+def __style_text(fname: str | Path, only_check: bool) -> str:
+    styled_fname = style_text(str(Path(fname).resolve()), TextModifiers.BOLD)
     if only_check:
-        return f"{formatted_fname}: No newline at the end of file!"
+        return f"{styled_fname}: No newline at the end of file!"
     else:
-        return f"{formatted_fname}: Added newline at the end of file."
+        return f"{styled_fname}: Added newline at the end of file."
 
 
 def newline_fix(path: str, only_check: bool = False):
@@ -25,7 +25,7 @@ def newline_fix(path: str, only_check: bool = False):
             modified |= newline_missing
 
             if newline_missing:
-                print(__format_text(fname, only_check))
+                print(__style_text(fname, only_check))
             if newline_missing and not only_check:
                 f.write(b"\n")
     return modified
