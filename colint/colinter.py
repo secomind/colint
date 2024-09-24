@@ -1,105 +1,123 @@
-import os
-import subprocess
+import argparse
 import sys
+from pathlib import Path
 
-import toml
-
-config = toml.load(os.path.dirname(__file__) + "/pyproject.toml")
-
-
-def run_command(command):
-    """Run a shell command."""
-    try:
-        subprocess.run(command, shell=True, check=True)
-    except subprocess.CalledProcessError as e:
-        print(f"Command failed: {e}")
-        sys.exit(1)
+from .code_format.code_format import format_code
+from .grammar_libraries.grammar_check import code_check
+from .newline_fix.newline_fix import newline_fix
+from .params.params import Params
+from .sort_libraries.sorter import sort_imports
+from .clean_jupyter.clean_jupyter import jupyter_clean
 
 
-def code_format(only_check: bool, args="."):
-    """Run black code formatter."""
-    line_length = config["tool"]["black"].get("line-length", 80)
-    exclude = config["tool"]["black"].get("exclude", "")
-    check_string = "--check" if only_check else ""
-    run_command(f"python3 -m black --line-length {line_length} --exclude '{exclude}' {check_string} {args}")
-    print(args)
+config_file = Path(__file__).parent / "pyproject.toml"
+params = Params.from_toml(config_file)
+
+COMMANDS = [
+    "clean-jupyter",
+    "code-format",
+    "grammar-check",
+    "lint",
+    "newline-fix",
+    "sort-libraries",
+]
 
 
-def flake_lint(_, args="."):
-    """Run flake8 linter."""
-    exclude = ",".join(config["tool"]["flake8"].get("exclude", []))
-    extend_ignore = ",".join(config["tool"]["flake8"].get("extend-ignore", []))
-    per_file_ignores = config["tool"]["flake8"].get("per-file-ignores", "").replace("\n", "")
-    run_command(
-        f"python3 -m flake8 --exclude {exclude} --extend-ignore {extend_ignore} --per-file-ignores='{per_file_ignores}' {args} "
-    )
+def perform_operation(key: str, path: str, only_check: bool) -> bool:
+    """
+    Perform a specified operation on a given directory or file path.
 
+    Args:
+        key (str): The command specifying the operation to perform.
+                   Must be one of the following:
+                   ['sort-libraries', 'code-format', 'grammar-check', 'newline-fix', 'clean-jupyter'].
+        path (str): The path to the directory or file on which to perform the operation.
+        only_check (bool): If True, performs a check without modifying the files.
 
-def isort(only_check: bool, args="."):
-    """Run isort for import sorting."""
-    profile = config["tool"]["isort"].get("profile", "black")
-    skip_glob = ",".join(config["tool"]["isort"].get("skip_glob", []))
-    check_string = "--check-only" if only_check else ""
-    run_command(f"python3 -m isort {args} --profile {profile} --skip-glob '{skip_glob}' {check_string}")
+    Returns:
+        bool: True if the operation is performed successfully, False otherwise.
 
-
-def vulture(_, args="."):
-    """Run vulture."""
-    exclude = ",".join(config["tool"]["vulture"].get("exclude", []))
-    run_command(f"python3 -m vulture {args} --exclude '{exclude}'")
-
-
-def type_check(_, args="."):
-    """Run mypy for type checking."""
-    python_version = config["tool"]["mypy"].get("python_version", "3.8")
-    overrides = " ".join(
-        [f"--exclude '{mod}'" for override in config["tool"]["mypy"].get("overrides", []) for mod in override["module"]]
-    )
-    run_command(f"python3 -m mypy {args}/*.py --python-version {python_version} {overrides}")
-
-
-def lint(only_check: bool, args="."):
-    """Run all linting tools: isort, black, flake8."""
-    isort(only_check, args)
-    code_format(only_check, args)
-    flake_lint(only_check, args)
-
-
-def clean():
-    """Clean up Python bytecode and cache files."""
-    run_command('find . -type f -name "*.py[co]" -delete')
-    run_command('find . -type d -name "__pycache__" -delete')
+    Raises:
+        KeyError: If the provided key is not in COMMANDS or is 'lint'.
+    """
+    if key not in COMMANDS or key == "lint":
+        raise KeyError(f'Cannot perform operation "{key}".')
+    if key == "clean-jupyter":
+        return jupyter_clean(path, only_check)
+    if key == "code-format":
+        return format_code(path, only_check, params.black)
+    if key == "grammar-check":
+        return code_check(path, params.flake8)
+    if key == "newline-fix":
+        return newline_fix(path, only_check)
+    assert key == "sort-libraries"
+    return sort_imports(path, only_check, params.isort)
 
 
 def main():
-    tasks = {
-        "code-format": code_format,
-        "flake-lint": flake_lint,
-        "isort": isort,
-        "vulture": vulture,
-        "type-check": type_check,
-        "lint": lint,
-        "clean": clean,
-    }
+    arg_parser = argparse.ArgumentParser(
+        description="Handles various commands related to directories and notebooks.",
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
 
-    if len(sys.argv) < 2:
-        print(f"Usage: {sys.argv[0]} <task> [args]")
+    arg_parser.add_argument(
+        "command",
+        choices=COMMANDS,
+        help=(
+            "Specify the command to execute. Options are:\n"
+            "  - sort-libraries: Sorts and organizes the library imports.\n"
+            "  - code-format: Formats the code according to defined style guides.\n"
+            "  - grammar-check: Checks for and corrects grammatical/styling errors in code and docstrings.\n"
+            "  - newline-fix: Fixes newline inconsistencies in the files.\n"
+            "  - clean-jupyter: Cleans Jupyter notebook files by removing unnecessary metadata and outputs.\n"
+            '  - lint: Performs all the operations above, but "clean-jupyter". To also use "clean-jupyter" use the --clean-notebooks flag.'
+        ),
+    )
+    arg_parser.add_argument(
+        "path_to_dir", help="Provide the path to the directory that needs linting."
+    )
+
+    arg_parser.add_argument(
+        "--check",
+        action="store_true",
+        help=(
+            "Enable check mode.\n"
+            "In this mode, linting will not modify files; it will only check for issues."
+        ),
+    )
+    arg_parser.add_argument(
+        "--clean-notebooks",
+        action="store_true",
+        help=(
+            "Enable clean-notebooks mode.\n"
+            'If "lint" command is selected, this adds a procedure to clean jupyter notebooks.\n'
+            "If another command is used, it has no effect."
+        ),
+    )
+
+    args = arg_parser.parse_args()
+
+    command = args.command
+    lint_dir = Path(args.path_to_dir)
+    only_check = args.check
+    clean_notebooks = args.clean_notebooks
+
+    if not lint_dir.is_dir() and not lint_dir.is_file():
+        print(f"Error: Path to directory '{lint_dir}' is not valid.")
         sys.exit(1)
 
-    task = sys.argv[1]
-    args = sys.argv[2:] if len(sys.argv) > 2 else ["."]
+    if command != "lint":
+        res = perform_operation(command, str(lint_dir.resolve()), only_check)
+        sys.exit(res)
 
-    only_check = "--check" in args
-    if only_check:
-        args.remove("--check")
-
-    if task in tasks:
-        tasks[task](only_check, *args)
-    else:
-        print(f"Unknown task: {task}")
-        sys.exit(1)
+    commands_to_perform = [
+        c for c in COMMANDS if c != "lint" and (c != "clean-jupyter" or clean_notebooks)
+    ]
+    res = False
+    for c in commands_to_perform:
+        res |= perform_operation(c, lint_dir, only_check)
+    sys.exit(res)
 
 
 if __name__ == "__main__":
     main()
-    print("Done!")
