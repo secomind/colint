@@ -38,6 +38,8 @@ per-file-ignores = '''
 
 max-complexity = 2
 
+docstring-convention = "google"
+
 [tool.isort]
 profile = "black"
 skip_glob = ["*/venv/*", "*/env/*", "*/docs/*", "*/lint_env/*", "*/.venv/*"]
