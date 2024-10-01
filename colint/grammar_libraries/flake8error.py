@@ -5,6 +5,8 @@ from ..utils.text_styling_utils import TextModifiers, style_text
 
 class Flake8Error:
     """
+    Flake8 error class handler.
+
     A class to represent a Flake8 error and provide methods for styling
     and determining if it should be ignored.
 
@@ -39,14 +41,20 @@ class Flake8Error:
         """
         cell_styled_list = []
         if self.cell_number:
-            cell_styled_list = [style_text(f"Cell{self.cell_number}", TextModifiers.INVERSE)]
+            cell_styled_list = [
+                style_text(f"Cell{self.cell_number}", TextModifiers.INVERSE)
+            ]
         path_styled = ":".join(
-            [str(Path(self.filename).resolve())] + cell_styled_list + [str(self.line_number), str(self.col_number)]
+            [str(Path(self.filename).resolve())]
+            + cell_styled_list
+            + [str(self.line_number), str(self.col_number)]
         )
         code_styled = style_text(self.code, [TextModifiers.ERROR, TextModifiers.BOLD])
         return f"{code_styled} {path_styled} - {self.message}"
 
-    def should_be_ignored(self, ignore: list[str] = [], per_file_ignores: dict[str, list[str]] = {}) -> bool:
+    def should_be_ignored(
+        self, ignore: list[str] = [], per_file_ignores: dict[str, list[str]] = {}
+    ) -> bool:
         """
         Determine whether the Flake8Error should be ignored based on the provided ignore lists.
 
@@ -69,9 +77,9 @@ class Flake8Error:
 
         if basename in per_file_ignores:
             to_ignore += per_file_ignores[basename]
-        
+
         # ignore docstring errors if it is a jupyter notebook
         if basename.endswith(".ipynb"):
-            to_ignore.append("D") 
+            to_ignore.append("D")
 
         return any([self.code.startswith(ignored_code) for ignored_code in to_ignore])

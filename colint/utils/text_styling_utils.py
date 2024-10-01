@@ -1,4 +1,6 @@
 class TextModifiers:
+    """A collection of text modifier constants for styling terminal output."""
+
     OK = 92  # Bright green
     WARNING = 93  # Bright Yellow
     ERROR = 91  # Bright Red
@@ -11,8 +13,9 @@ class TextModifiers:
 
 def style_text(text: str, codes: int | list[int]) -> str:
     """
-    Returns a styled version of the input text. Automatically includes an end styling character
-    at the end of the string.
+    Return a styled version of the input text.
+
+    Automatically includes an end styling character at the end of the string.
 
     Parameters:
     text (str): The text to be styled

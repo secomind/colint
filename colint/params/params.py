@@ -32,7 +32,7 @@ class Params:
     @staticmethod
     def from_toml(toml_path: Path) -> "Params":
         """
-        Static method to create Params instance from a TOML file.
+        Create Params instance from a TOML file.
 
         Args:
             toml_path (Path): Path to the TOML file.
@@ -56,11 +56,17 @@ class Params:
         data = data["tool"]
 
         if "isort" not in data.keys():
-            raise IsortConfigNotFound(f"{toml_path} does not contain isort configurations.")
+            raise IsortConfigNotFound(
+                f"{toml_path} does not contain isort configurations."
+            )
         if "flake8" not in data.keys():
-            raise Flake8ConfigNotFound(f"{toml_path} does not contain flaek8 configurations.")
+            raise Flake8ConfigNotFound(
+                f"{toml_path} does not contain flaek8 configurations."
+            )
         if "black" not in data.keys():
-            raise BlackConfigNotFound(f"{toml_path} does not contain black configurations.")
+            raise BlackConfigNotFound(
+                f"{toml_path} does not contain black configurations."
+            )
 
         return Params(
             isort=IsortParams.from_dict(data["isort"]),

@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Any, Optional, Union
 
 from .exceptions import InvalidJupyterCellData, InvalidJupyterNotebookData
 
@@ -21,7 +22,22 @@ def delete_from_dict_if_exists(d: dict, keys: list[str]):
     return res
 
 
-def safe_json_load(path: Path):
+def safe_json_load(path: Path) -> Optional[Union[dict, list, Any]]:
+    """
+    Safely load JSON data from a file, ensuring the file is not empty.
+
+    This function reads text content from the given file path, strips any
+    surrounding whitespace, and attempts to load it as JSON. If the file is
+    empty, it returns None.
+
+    Args:
+        path (Path): The file path from which to read the JSON data.
+
+    Returns:
+        Optional[Union[dict, list, Any]]: The parsed JSON content as a Python
+        object (dict, list or other types supported by JSON), or None if the
+        file is empty.
+    """
     text = path.read_text().strip()
     if len(text) == 0:
         return None
@@ -212,7 +228,7 @@ class JupyterNotebokParser:
 
     def cells(self):
         """
-        Generator that yields all cells in the notebook.
+        Yield all cells in the notebook.
 
         Yields:
             JupyterCell: Each cell in the notebook.
@@ -222,7 +238,7 @@ class JupyterNotebokParser:
 
     def code_cells(self, exclude_empty: bool = False):
         """
-        Generator that yields code cells in the notebook.
+        Yield code cells in the notebook.
 
         Args:
             exclude_empty (bool): If True, excludes cells that don't have code. Defaults to False.
@@ -238,7 +254,7 @@ class JupyterNotebokParser:
 
     def markdown_cells(self):
         """
-        Generator that yields markdown cells in the notebook.
+        Yield markdown cells in the notebook.
 
         Yields:
             JupyterCell: Each markdown cell in the notebook.

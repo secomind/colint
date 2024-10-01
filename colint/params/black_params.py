@@ -38,6 +38,18 @@ class BlackParams:
 
     @staticmethod
     def convert_to_target_version(key: str) -> TargetVersion:
+        """
+        Convert a python-version string into a Black Library TargetVersion.
+
+        Args:
+            key (str): The python-version string.
+
+        Returns:
+            TargetVersion: Python version in Black's TargetVersion Format.
+
+        Raises:
+            KeyError: Raised if 'key' is not supported.
+        """
         if key not in _str_to_target_version:
             raise KeyError(f"Unsupported target version: {key}.")
         return _str_to_target_version[key]
@@ -63,15 +75,8 @@ class BlackParams:
         except ValueError:
             line_length = 88
 
-        try:
-            preview = bool(obj.get("preview", False))
-        except:
-            preview = False
-
-        try:
-            unstable = bool(obj.get("unstable", False))
-        except:
-            unstable = False
+        preview = bool(obj.get("preview", False))
+        unstable = bool(obj.get("unstable", False))
 
         return BlackParams(
             target_version=versions,

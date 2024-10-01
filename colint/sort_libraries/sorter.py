@@ -36,7 +36,9 @@ def __isort_text(text: str, params: IsortParams) -> tuple[str, bool]:
     output_byte_stream = io.BytesIO()
     output_text_stream = io.TextIOWrapper(output_byte_stream, encoding="utf-8")
 
-    has_been_sorted = isort.stream(input_text_stream, output_text_stream, profile=params.profile)
+    has_been_sorted = isort.stream(
+        input_text_stream, output_text_stream, profile=params.profile
+    )
 
     # Retrieve the sorted text from the output stream
     output_text_stream.seek(0)
@@ -94,7 +96,9 @@ def sort_imports(path: str, only_check: bool, params: IsortParams) -> bool:
 
     # Filter out Python and Jupyter notebook files
     script_files = [Path(f) for f in files if f.endswith(".py") and Path(f).is_file()]
-    notebook_files = [Path(f) for f in files if f.endswith(".ipynb") and Path(f).is_file()]
+    notebook_files = [
+        Path(f) for f in files if f.endswith(".ipynb") and Path(f).is_file()
+    ]
 
     # Process Python files
     for f in script_files:

@@ -2,13 +2,12 @@ import argparse
 import sys
 from pathlib import Path
 
+from .clean_jupyter.clean_jupyter import jupyter_clean
 from .code_format.code_format import format_code
 from .grammar_libraries.grammar_check import code_check
 from .newline_fix.newline_fix import newline_fix
 from .params.params import Params
 from .sort_libraries.sorter import sort_imports
-from .clean_jupyter.clean_jupyter import jupyter_clean
-
 
 config_file = Path(__file__).parent / "pyproject.toml"
 params = Params.from_toml(config_file)
@@ -55,6 +54,18 @@ def perform_operation(key: str, path: str, only_check: bool) -> bool:
 
 
 def main():
+    """
+    Run the main entry point of the application.
+
+    This function serves as the starting point for the script.
+    It initializes the process and coordinates the overall workflow.
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     arg_parser = argparse.ArgumentParser(
         description="Handles various commands related to directories and notebooks.",
         formatter_class=argparse.RawTextHelpFormatter,

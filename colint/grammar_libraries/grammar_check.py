@@ -10,7 +10,9 @@ from .flake8error import Flake8Error
 from .get_custom_style_guide import get_custom_style_guide
 
 
-def __report_to_errors(report: list[tuple], replace_fname: str | None = None) -> list[Flake8Error]:
+def __report_to_errors(
+    report: list[tuple], replace_fname: str | None = None
+) -> list[Flake8Error]:
     """
     Convert a flake8 report to a list of Flake8Error objects.
 
@@ -47,7 +49,9 @@ def __find_min_index(nums, target):
     return -1
 
 
-def __report_from_string(style_guide: flake8.StyleGuide, text: str) -> list[Flake8Error]:
+def __report_from_string(
+    style_guide: flake8.StyleGuide, text: str
+) -> list[Flake8Error]:
     """
     Generate a flake8 report from a string of code.
 
@@ -67,7 +71,9 @@ def __report_from_string(style_guide: flake8.StyleGuide, text: str) -> list[Flak
     return __report_to_errors(results)
 
 
-def __code_check_jupyter_notebook(style_guide: flake8.StyleGuide, fname: Path | str) -> list[Flake8Error]:
+def __code_check_jupyter_notebook(
+    style_guide: flake8.StyleGuide, fname: Path | str
+) -> list[Flake8Error]:
     """
     Check a Jupyter notebook for flake8 errors.
 
@@ -121,7 +127,9 @@ def code_check(path: str, params: Flake8Params) -> bool:
     errors = [
         error
         for error in errors
-        if not error.should_be_ignored(ignore=params.extend_ignore, per_file_ignores=params.per_file_ignores)
+        if not error.should_be_ignored(
+            ignore=params.extend_ignore, per_file_ignores=params.per_file_ignores
+        )
     ]
 
     for err in errors:
