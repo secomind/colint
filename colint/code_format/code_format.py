@@ -10,8 +10,7 @@ from ..utils.text_styling_utils import TextModifiers, style_text
 
 
 def __get_black_mode(params: BlackParams) -> Mode:
-    """
-    Create a Black formatter Mode instance based on the provided parameters.
+    """Create a Black formatter Mode instance based on the provided parameters.
 
     Args:
         params (BlackParams): The parameters to customize the Black formatter mode.
@@ -28,8 +27,7 @@ def __get_black_mode(params: BlackParams) -> Mode:
 
 
 def __style_black_message(fname: str | Path, only_check: bool) -> str:
-    """
-    Styles a message indicating whether a file would have been or has been reformatted.
+    """Styles a message indicating whether a file would have been or has been reformatted.
 
     Args:
         fname (str | Path): The file name.
@@ -55,8 +53,7 @@ def __get_formatted_text(text: str, mode: Mode) -> str:
 
 
 def format_notebook(nb_path: str | Path, only_check: bool, mode: Mode) -> bool:
-    """
-    Format the code in a Jupyter notebook using Black.
+    """Format the code in a Jupyter notebook using Black.
 
     Args:
         nb_path (str | Path): The path to the Jupyter notebook file.
@@ -81,8 +78,7 @@ def format_notebook(nb_path: str | Path, only_check: bool, mode: Mode) -> bool:
 
 
 def format_script(input_path: str | Path, only_check: bool, mode: Mode) -> bool:
-    """
-    Format the code in a Python script using Black.
+    """Format the code in a Python script using Black.
 
     Args:
         input_path (str | Path): The path to the Python script file.
@@ -101,8 +97,7 @@ def format_script(input_path: str | Path, only_check: bool, mode: Mode) -> bool:
 
 
 def format_code(path: str, only_check: bool, params: BlackParams) -> bool:
-    """
-    Format the code in Python scripts and Jupyter notebooks within the given path using Black.
+    """Format the code in Python scripts and Jupyter notebooks within the given path using Black.
 
     Args:
         path (str): The root directory path to search for files.

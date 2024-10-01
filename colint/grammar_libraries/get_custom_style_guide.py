@@ -8,8 +8,7 @@ from ..params.flake8_params import Flake8Params
 
 
 def get_custom_style_guide(params: Flake8Params):
-    """
-    Create a custom flake8 StyleGuide based on the provided parameters.
+    """Create a custom flake8 StyleGuide based on the provided parameters.
 
     Args:
         params (Flake8Params): The parameters to customize the style guide.
@@ -22,7 +21,12 @@ def get_custom_style_guide(params: Flake8Params):
     """
     params_dict = asdict(params)
     flake8_app = app.Application()
-    flake8_app.plugins, flake8_app.options = parse_args([f"--max-complexity={params.max_complexity}"])
+    flake8_app.plugins, flake8_app.options = parse_args(
+        [
+            f"--max-complexity={params.max_complexity}",
+            f"--docstring-convention={params.docstring_convention}",
+        ]
+    )
     options = flake8_app.options
     for key, value in params_dict.items():
         if key in {"per_file_ignores", "extend_ignore"}:

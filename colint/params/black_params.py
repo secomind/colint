@@ -19,8 +19,7 @@ _str_to_target_version = {
 
 @dataclass
 class BlackParams:
-    """
-    A data class to represent Black configuration parameters.
+    """A data class to represent Black configuration parameters.
 
     Attributes:
         target_version (list[str]): List of target Python versions for the Black formatter.
@@ -38,14 +37,24 @@ class BlackParams:
 
     @staticmethod
     def convert_to_target_version(key: str) -> TargetVersion:
+        """Convert a python-version string into a Black Library TargetVersion.
+
+        Args:
+            key (str): The python-version string.
+
+        Returns:
+            TargetVersion: Python version in Black's TargetVersion Format.
+
+        Raises:
+            KeyError: Raised if 'key' is not supported.
+        """
         if key not in _str_to_target_version:
             raise KeyError(f"Unsupported target version: {key}.")
         return _str_to_target_version[key]
 
     @staticmethod
     def from_dict(obj: dict) -> "BlackParams":
-        """
-        Create a BlackParams instance from a dictionary.
+        """Create a BlackParams instance from a dictionary.
 
         Args:
             obj (dict): A dictionary containing Black configuration parameters.
@@ -59,19 +68,12 @@ class BlackParams:
         versions = set(_str_to_target_version[k] for k in versions)
 
         try:
-            line_length = int(obj.get("line_length", 88))
+            line_length = int(obj.get("line-length", 88))
         except ValueError:
             line_length = 88
 
-        try:
-            preview = bool(obj.get("preview", False))
-        except:
-            preview = False
-
-        try:
-            unstable = bool(obj.get("unstable", False))
-        except:
-            unstable = False
+        preview = bool(obj.get("preview", False))
+        unstable = bool(obj.get("unstable", False))
 
         return BlackParams(
             target_version=versions,
