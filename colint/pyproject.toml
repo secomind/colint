@@ -1,18 +1,4 @@
 [tool.flake8]
-# needs to be coherent with black settings
-exclude = [
-    ".git",
-    "__pycache__",
-    "venv",
-    "lint_env",
-    "env",
-    "docs",
-    "notebooks",
-    "poc_materials",
-    ".buildozer",
-    ".env",
-    ".venv"
-]
 
 extend-ignore = [
     # Styling rules already handled by black
@@ -24,55 +10,24 @@ extend-ignore = [
     "W3",
     "E5",
     "W5",
-    # Conflicts with regexes
-    "W605",
-    # Rule too strict (no lambdas)
-    "E731",
-    "E402"
+    # No import at top of file: conflict with certain Data Science Packages
+    "E402",
+    #Docstring 
+    "D100",
+    "D104"
 ]
 
 per-file-ignores = '''
     __init__.py:F401
-    setup.py:E121
 '''
 
-max-complexity = 2
+max-complexity = 10
 
 docstring-convention = "google"
 
 [tool.isort]
 profile = "black"
-skip_glob = ["*/venv/*", "*/env/*", "*/docs/*", "*/lint_env/*", "*/.venv/*"]
-
 
 [tool.black]
-line-length = 120
-exclude = '''
-    lint_env\/|venv\/|env\/|docs\/|notebooks\/|poc\_materials\/|\.buildozer\/|.venv\/|.env\/
-'''
+line-length = 88
 preview = true
-
-[tool.vulture]
-exclude = [
-    "*/__pycache__/*",
-    "*/venv/*",
-    "*/.venv/*",
-    "*/lint_env/*",
-    "*/env/*",
-    "*/.env/*",
-    "*/docs/*",
-]
-
-[tool.mypy]
-python_version = "3.10"
-
-[[tool.mypy.overrides]]
-module = [
-    "sqlalchemy",
-    "sqlalchemy.*",
-    "sendgrid.*",
-    "dotenv",
-    "google.*",
-    "flask"
-]
-ignore_missing_imports = true
