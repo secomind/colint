@@ -23,7 +23,10 @@ def get_custom_style_guide(params: Flake8Params):
     params_dict = asdict(params)
     flake8_app = app.Application()
     flake8_app.plugins, flake8_app.options = parse_args(
-        [f"--max-complexity={params.max_complexity}"]
+        [
+            f"--max-complexity={params.max_complexity}",
+            f"--docstring-convention={params.docstring_convention}",
+        ]
     )
     options = flake8_app.options
     for key, value in params_dict.items():

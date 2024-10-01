@@ -19,6 +19,7 @@ class Flake8Params:
     extend_ignore: list[str] = field(default_factory=list)
     max_complexity: int = -1
     quiet: int = 2
+    docstring_convention: str = "pep257"
 
     @staticmethod
     def __safe_get_integer(obj: dict, key: str, default_value: int) -> int:
@@ -79,9 +80,12 @@ class Flake8Params:
         max_complexity = Flake8Params.__safe_get_integer(obj, "max-complexity", -1)
         quiet = Flake8Params.__safe_get_integer(obj, "quiet", 2)
 
+        docstring_convention = obj.get("docstring-convention", "pep257")
+
         return Flake8Params(
             per_file_ignores=per_file_ignores,
             extend_ignore=extend_ignore,
             max_complexity=max_complexity,
             quiet=quiet,
+            docstring_convention=docstring_convention,
         )
