@@ -23,8 +23,7 @@ COMMANDS = [
 
 
 def perform_operation(key: str, path: str, only_check: bool) -> bool:
-    """
-    Perform a specified operation on a given directory or file path.
+    """Perform a specified operation on a given directory or file path.
 
     Args:
         key (str): The command specifying the operation to perform.
@@ -54,8 +53,7 @@ def perform_operation(key: str, path: str, only_check: bool) -> bool:
 
 
 def main():
-    """
-    Run the main entry point of the application.
+    """Run the main entry point of the application.
 
     This function serves as the starting point for the script.
     It initializes the process and coordinates the overall workflow.

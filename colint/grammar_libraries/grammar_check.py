@@ -13,8 +13,7 @@ from .get_custom_style_guide import get_custom_style_guide
 def __report_to_errors(
     report: list[tuple], replace_fname: str | None = None
 ) -> list[Flake8Error]:
-    """
-    Convert a flake8 report to a list of Flake8Error objects.
+    """Convert a flake8 report to a list of Flake8Error objects.
 
     Args:
         report (list[tuple]): A list of tuples representing flake8 errors; returned by flake8.
@@ -31,8 +30,7 @@ def __report_to_errors(
 
 
 def __find_min_index(nums, target):
-    """
-    Find the minimum index in a list where the running sum of elements is greater than or equal to the target.
+    """Find the minimum index in a list where the running sum of elements is greater than or equal to the target.
 
     Args:
         nums (list[int]): A list of integers.
@@ -52,8 +50,7 @@ def __find_min_index(nums, target):
 def __report_from_string(
     style_guide: flake8.StyleGuide, text: str
 ) -> list[Flake8Error]:
-    """
-    Generate a flake8 report from a string of code.
+    """Generate a flake8 report from a string of code.
 
     Args:
         style_guide (StyleGuide): The flake8 (legacy) style guide object.
@@ -74,8 +71,7 @@ def __report_from_string(
 def __code_check_jupyter_notebook(
     style_guide: flake8.StyleGuide, fname: Path | str
 ) -> list[Flake8Error]:
-    """
-    Check a Jupyter notebook for flake8 errors.
+    """Check a Jupyter notebook for flake8 errors.
 
     Args:
         style_guide (StyleGuide): The flake8 (legacy) style guide object.
@@ -101,8 +97,7 @@ def __code_check_jupyter_notebook(
 
 
 def code_check(path: str, params: Flake8Params) -> bool:
-    """
-    Check code files (Python scripts and Jupyter notebooks) for flake8 errors.
+    """Check code files (Python scripts and Jupyter notebooks) for flake8 errors.
 
     Args:
         path (str): The path to the directory or file to be checked.

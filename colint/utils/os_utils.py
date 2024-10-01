@@ -6,8 +6,7 @@ from .exceptions import NotValidPath
 
 
 def get_git_repo(path: str) -> git.Repo | None:
-    """
-    Retrieve a Git repository object from the specified path.
+    """Retrieve a Git repository object from the specified path.
 
     Args:
         path (str): The directory path to search for a Git repository.
@@ -26,12 +25,11 @@ def get_git_repo(path: str) -> git.Repo | None:
 
 
 def get_valid_files(path: str | Path) -> list[str]:
-    """
-    Retrieve a list of valid file paths in the specified directory.
+    """Retrieve a list of valid file paths in the specified directory.
 
     It excludes files in the '.git' directory and ignored files according to Git.
 
-    Parameters:
+    Args:
     path (str): The path to a directory or a file.
 
     Returns:

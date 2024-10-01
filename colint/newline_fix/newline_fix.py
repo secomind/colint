@@ -13,8 +13,7 @@ def __style_text(fname: str | Path, only_check: bool) -> str:
 
 
 def newline_fix(path: str, only_check: bool = False):
-    """
-    Ensure that all files in the specified directory have a newline at the end.
+    """Ensure that all files in the specified directory have a newline at the end.
 
     This function iterates over all the valid files in the given directory and
     checks if they end with a newline character. If a file does not end with a

@@ -6,8 +6,7 @@ from ..utils.text_styling_utils import TextModifiers, style_text
 
 
 def __style_text(fname: str | Path, only_check: bool) -> str:
-    """
-    Styles the file name for display.
+    """Styles the file name for display.
 
     Args:
         fname (str | Path): The name or path of the file.
@@ -24,8 +23,7 @@ def __style_text(fname: str | Path, only_check: bool) -> str:
 
 
 def __clean_notebook(fname: str | Path, only_check: bool) -> bool:
-    """
-    Clean outputs from a Jupyter notebook or check if it has outputs.
+    """Clean outputs from a Jupyter notebook or check if it has outputs.
 
     Args:
         fname (str | Path): The name or path of the Jupyter notebook file.
@@ -48,8 +46,7 @@ def __clean_notebook(fname: str | Path, only_check: bool) -> bool:
 
 
 def jupyter_clean(path: str, only_check: bool) -> bool:
-    """
-    Clean outputs from all Jupyter notebooks in a directory or check if they have outputs.
+    """Clean outputs from all Jupyter notebooks in a directory or check if they have outputs.
 
     Args:
         path (str): The directory path to search for Jupyter notebooks.

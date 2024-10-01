@@ -6,8 +6,7 @@ from .exceptions import InvalidJupyterCellData, InvalidJupyterNotebookData
 
 
 def delete_from_dict_if_exists(d: dict, keys: list[str]):
-    """
-    Remove specified keys from a dictionary if they exist.
+    """Remove specified keys from a dictionary if they exist.
 
     Args:
         d (dict): The dictionary to remove keys from.
@@ -23,8 +22,7 @@ def delete_from_dict_if_exists(d: dict, keys: list[str]):
 
 
 def safe_json_load(path: Path) -> Optional[Union[dict, list, Any]]:
-    """
-    Safely load JSON data from a file, ensuring the file is not empty.
+    """Safely load JSON data from a file, ensuring the file is not empty.
 
     This function reads text content from the given file path, strips any
     surrounding whitespace, and attempts to load it as JSON. If the file is
@@ -45,8 +43,7 @@ def safe_json_load(path: Path) -> Optional[Union[dict, list, Any]]:
 
 
 class JupyterCell:
-    """
-    Representation of a Jupyter notebook cell.
+    """Representation of a Jupyter notebook cell.
 
     Attributes:
         __cell_type (str): The type of the cell ('code', 'markdown', 'raw').
@@ -57,8 +54,7 @@ class JupyterCell:
     """
 
     def __init__(self, cell_data: dict):
-        """
-        Initialize a JupyterCell with given cell data.
+        """Initialize a JupyterCell with given cell data.
 
         Args:
             cell_data (dict): The data representing a Jupyter notebook cell.
@@ -88,8 +84,7 @@ class JupyterCell:
 
     @property
     def text(self):
-        """
-        Get the text of the cell.
+        """Get the text of the cell.
 
         Returns:
             str: The text of the cell joined by newline characters.
@@ -98,8 +93,7 @@ class JupyterCell:
 
     @text.setter
     def text(self, value: str):
-        """
-        Set the text of the cell.
+        """Set the text of the cell.
 
         Args:
             value (str): The text to set for the cell.
@@ -108,8 +102,7 @@ class JupyterCell:
 
     @property
     def cell_type(self):
-        """
-        Get the type of the cell.
+        """Get the type of the cell.
 
         Returns:
             str: The type of the cell.
@@ -118,8 +111,7 @@ class JupyterCell:
 
     @property
     def size(self):
-        """
-        Get the number of lines in the cell.
+        """Get the number of lines in the cell.
 
         Returns:
             int: The number of lines in the cell.
@@ -128,8 +120,7 @@ class JupyterCell:
 
     @property
     def execution_count(self):
-        """
-        Get the execution count of the cell.
+        """Get the execution count of the cell.
 
         Returns:
             int or None: The execution count of the cell if it's a code cell, otherwise None.
@@ -137,8 +128,7 @@ class JupyterCell:
         return self.__execution_count
 
     def has_code(self) -> bool:
-        """
-        Check if there is any code in the cell (excluding comments and empty lines).
+        """Check if there is any code in the cell (excluding comments and empty lines).
 
         Returns:
             bool: True if there is any code, False otherwise.
@@ -153,8 +143,7 @@ class JupyterCell:
         )
 
     def has_output(self, picky: bool = False) -> bool:
-        """
-        Check if the cell has any outputs.
+        """Check if the cell has any outputs.
 
         Args:
             picky (bool): Whether to consider a non-null execution count as an output. Defaults to False.
@@ -167,8 +156,7 @@ class JupyterCell:
         )
 
     def clear_output(self, reset_execution_count: bool = False):
-        """
-        Clear all outputs from the cell.
+        """Clear all outputs from the cell.
 
         Args:
             reset_execution_count (bool): Whether to reset the execution count to None. Defaults to False.
@@ -178,8 +166,7 @@ class JupyterCell:
             self.__execution_count = None
 
     def to_dict(self) -> dict:
-        """
-        Convert the cell to a dictionary.
+        """Convert the cell to a dictionary.
 
         Returns:
             dict: A dictionary representation of the cell.
@@ -194,8 +181,7 @@ class JupyterCell:
 
 
 class JupyterNotebokParser:
-    """
-    Parser for Jupyter notebook files.
+    """Parser for Jupyter notebook files.
 
     Attributes:
         __cells (list[JupyterCell]): List of cells in the notebook.
@@ -203,8 +189,7 @@ class JupyterNotebokParser:
     """
 
     def __init__(self, path: Path | str) -> None:
-        """
-        Initialize the parser with the path to a Jupyter notebook file.
+        """Initialize the parser with the path to a Jupyter notebook file.
 
         Args:
             path (Path | str): The path to the Jupyter notebook file.
@@ -227,8 +212,7 @@ class JupyterNotebokParser:
         self.__metadata = delete_from_dict_if_exists(data, ["cells"])
 
     def cells(self):
-        """
-        Yield all cells in the notebook.
+        """Yield all cells in the notebook.
 
         Yields:
             JupyterCell: Each cell in the notebook.
@@ -237,8 +221,7 @@ class JupyterNotebokParser:
             yield cell
 
     def code_cells(self, exclude_empty: bool = False):
-        """
-        Yield code cells in the notebook.
+        """Yield code cells in the notebook.
 
         Args:
             exclude_empty (bool): If True, excludes cells that don't have code. Defaults to False.
@@ -253,8 +236,7 @@ class JupyterNotebokParser:
                 yield cell
 
     def markdown_cells(self):
-        """
-        Yield markdown cells in the notebook.
+        """Yield markdown cells in the notebook.
 
         Yields:
             JupyterCell: Each markdown cell in the notebook.
@@ -264,8 +246,7 @@ class JupyterNotebokParser:
                 yield cell
 
     def to_dict(self) -> dict:
-        """
-        Convert the notebook to a dictionary.
+        """Convert the notebook to a dictionary.
 
         Returns:
             dict: A dictionary representation of the notebook.
@@ -275,8 +256,7 @@ class JupyterNotebokParser:
         return res
 
     def save(self, fname: Path | str):
-        """
-        Save the notebook to a file.
+        """Save the notebook to a file.
 
         Args:
             fname (Path | str): The path to the file where the notebook will be saved.

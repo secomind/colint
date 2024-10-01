@@ -12,12 +12,11 @@ class TextModifiers:
 
 
 def style_text(text: str, codes: int | list[int]) -> str:
-    """
-    Return a styled version of the input text.
+    """Return a styled version of the input text.
 
     Automatically includes an end styling character at the end of the string.
 
-    Parameters:
+    Args:
     text (str): The text to be styled
     codes (int | list[int]): styling codes to be used in the text.
                              Refer to TextModifiers for the useful codes.

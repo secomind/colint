@@ -17,8 +17,7 @@ from .isort_params import IsortParams
 
 @dataclass
 class Params:
-    """
-    A class to hold parameters for tools.
+    """A class to hold parameters for tools.
 
     Attributes:
         isort (IsortParams): Holds isort configuration parameters.
@@ -31,8 +30,7 @@ class Params:
 
     @staticmethod
     def from_toml(toml_path: Path) -> "Params":
-        """
-        Create Params instance from a TOML file.
+        """Create Params instance from a TOML file.
 
         Args:
             toml_path (Path): Path to the TOML file.

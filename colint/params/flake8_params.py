@@ -5,8 +5,7 @@ from .exceptions import InvalidFlake8PerFileIgnore
 
 @dataclass
 class Flake8Params:
-    """
-    A data class to represent Flake8 configuration parameters.
+    """A data class to represent Flake8 configuration parameters.
 
     Attributes:
         per_file_ignores (dict[str, list[str]]): A dictionary to specify errors to ignore for specific files.
@@ -23,8 +22,7 @@ class Flake8Params:
 
     @staticmethod
     def __safe_get_integer(obj: dict, key: str, default_value: int) -> int:
-        """
-        Safely retrieves an integer value from a dictionary by key.
+        """Safely retrieves an integer value from a dictionary by key.
 
         This function attempts to retrieve the value associated with the specified
         key from the given dictionary and convert it to an integer. If the key
@@ -48,8 +46,7 @@ class Flake8Params:
 
     @staticmethod
     def from_dict(obj: dict) -> "Flake8Params":
-        """
-        Create a Flake8Params instance from a dictionary.
+        """Create a Flake8Params instance from a dictionary.
 
         Args:
             obj (dict): A dictionary containing Flake8 configuration parameters.

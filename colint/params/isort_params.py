@@ -4,8 +4,7 @@ from typing import Dict, Union
 
 @dataclass
 class IsortParams:
-    """
-    A class to represent isort parameters.
+    """A class to represent isort parameters.
 
     Attributes:
         profile (str | None): Isort configuration profile which determines the
@@ -16,8 +15,7 @@ class IsortParams:
 
     @staticmethod
     def from_dict(obj: Dict[str, Union[str, None]]) -> "IsortParams":
-        """
-        Create an instance of IsortParams from a dictionary.
+        """Create an instance of IsortParams from a dictionary.
 
         This method extracts the 'profile' key from the given dictionary and
         uses it to initialize an IsortParams instance.
