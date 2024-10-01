@@ -19,6 +19,7 @@ class Flake8Params:
     max_complexity: int = -1
     quiet: int = 2
     docstring_convention: str = "pep257"
+    max_doc_length: int = 88
 
     @staticmethod
     def __safe_get_integer(obj: dict, key: str, default_value: int) -> int:
@@ -79,10 +80,13 @@ class Flake8Params:
 
         docstring_convention = obj.get("docstring-convention", "pep257")
 
+        max_doc_length = Flake8Params.__safe_get_integer(obj, "max-doc-length", 88)
+
         return Flake8Params(
             per_file_ignores=per_file_ignores,
             extend_ignore=extend_ignore,
             max_complexity=max_complexity,
             quiet=quiet,
             docstring_convention=docstring_convention,
+            max_doc_length=max_doc_length,
         )

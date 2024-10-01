@@ -9,7 +9,8 @@ extend-ignore = [
     "E3",
     "W3",
     "E5",
-    "W5",
+    "W503",
+    "W504",
     # No import at top of file: conflict with certain Data Science Packages
     "E402",
     #Docstring 
@@ -24,6 +25,8 @@ per-file-ignores = '''
 max-complexity = 10
 
 docstring-convention = "google"
+
+max-doc-length = 88
 
 [tool.isort]
 profile = "black"

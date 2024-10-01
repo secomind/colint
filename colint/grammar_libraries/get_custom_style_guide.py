@@ -25,6 +25,7 @@ def get_custom_style_guide(params: Flake8Params):
         [
             f"--max-complexity={params.max_complexity}",
             f"--docstring-convention={params.docstring_convention}",
+            f"--max-doc-length={params.max_doc_length}",
         ]
     )
     options = flake8_app.options
