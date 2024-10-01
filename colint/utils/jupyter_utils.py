@@ -49,7 +49,8 @@ class JupyterCell:
         __cell_type (str): The type of the cell ('code', 'markdown', 'raw').
         __lines (list[str]): The source code/text of the cell.
         __outputs (list[dict]): The outputs of the cell if it's a code cell.
-        __execution_count (int or None): The execution count of the cell if it's a code cell.
+        __execution_count (int or None): The execution count of the cell,
+            if it's a code cell.
         __metadata (dict): Additional metadata for the cell.
     """
 
@@ -123,7 +124,8 @@ class JupyterCell:
         """Get the execution count of the cell.
 
         Returns:
-            int or None: The execution count of the cell if it's a code cell, otherwise None.
+            int or None: The execution count of the cell if it's a code cell,
+                otherwise None.
         """
         return self.__execution_count
 
@@ -146,7 +148,8 @@ class JupyterCell:
         """Check if the cell has any outputs.
 
         Args:
-            picky (bool): Whether to consider a non-null execution count as an output. Defaults to False.
+            picky (bool): Whether to consider a non-null execution count as an output.
+                Defaults to False.
 
         Returns:
             bool: True if there are outputs, False otherwise.
@@ -159,7 +162,8 @@ class JupyterCell:
         """Clear all outputs from the cell.
 
         Args:
-            reset_execution_count (bool): Whether to reset the execution count to None. Defaults to False.
+            reset_execution_count (bool): Whether to reset the execution count to None.
+                Defaults to False.
         """
         self.__outputs = []
         if reset_execution_count:
@@ -224,7 +228,8 @@ class JupyterNotebokParser:
         """Yield code cells in the notebook.
 
         Args:
-            exclude_empty (bool): If True, excludes cells that don't have code. Defaults to False.
+            exclude_empty (bool): If True, excludes cells that don't have code.
+                Defaults to False.
 
         Yields:
             JupyterCell: Each code cell in the notebook that meets the criteria.

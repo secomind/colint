@@ -8,8 +8,10 @@ class Flake8Params:
     """A data class to represent Flake8 configuration parameters.
 
     Attributes:
-        per_file_ignores (dict[str, list[str]]): A dictionary to specify errors to ignore for specific files.
-        extend_ignore (list[str]): A list of error codes to extend the default ignore list.
+        per_file_ignores (dict[str, list[str]]): A dictionary to specify errors
+            to ignore for specific files.
+        extend_ignore (list[str]): A list of error codes to extend
+            the default ignore list.
         max_complexity (int): The maximum allowed complexity for the code.
         quiet (int): The quiet level for Flake8 (controls verbosity).
     """
@@ -56,7 +58,8 @@ class Flake8Params:
             Flake8Params: An instance of Flake8Params.
 
         Raises:
-            InvalidFlake8PerFileIgnore: If the per-file-ignore property is improperly formatted.
+            InvalidFlake8PerFileIgnore: If the per-file-ignore property
+                is improperly formatted.
         """
         per_file_ignores_string = obj.get("per-file-ignores")
         if not isinstance(per_file_ignores_string, str):

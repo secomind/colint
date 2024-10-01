@@ -22,7 +22,8 @@ class BlackParams:
     """A data class to represent Black configuration parameters.
 
     Attributes:
-        target_version (list[str]): List of target Python versions for the Black formatter.
+        target_version (list[str]): List of target Python versions
+            for the Black formatter.
         line_length (int): Maximum allowed line length.
         preview (bool): Whether to enable preview features.
         unstable (bool): Whether to enable unstable features.

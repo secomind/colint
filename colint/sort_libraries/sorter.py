@@ -27,7 +27,8 @@ def __isort_text(text: str, params: IsortParams) -> tuple[str, bool]:
         params (IsortParams): The isort parameters to apply for import-sorting.
 
     Returns:
-        tuple[str, bool]: A tuple containing the import-sorted text and a boolean indicating if changes were made.
+        tuple[str, bool]: A tuple containing the import-sorted text
+            and a boolean indicating if changes were made.
     """
     # Create byte streams for input and output
     input_byte_stream = io.BytesIO(text.encode("utf-8"))
@@ -77,7 +78,7 @@ def __isort_jupyter_notebook(fname: str, only_check: bool, params: IsortParams) 
 
 
 def sort_imports(path: str, only_check: bool, params: IsortParams) -> bool:
-    """Sort import statements in all Python and Jupyter notebook files in the given path.
+    """Sort import statements in all .py and .ipynb files in the given path.
 
     Args:
         path (str): The directory path to search for files.

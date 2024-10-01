@@ -23,8 +23,8 @@ class Flake8Error:
 
         Args:
             fname (str): The filename where the error occurred.
-            error_tuple (tuple[str, int, int, str, str]): A tuple containing the error code, line number,
-                                                          column number, message, and a placeholder.
+            error_tuple (tuple[str, int, int, str, str]): A tuple containing
+                the error code, line number, column number, message, and a placeholder.
         """
         self.code, self.line_number, self.col_number, self.message, _ = error_tuple
         self.filename = fname
@@ -52,13 +52,14 @@ class Flake8Error:
     def should_be_ignored(
         self, ignore: list[str] = [], per_file_ignores: dict[str, list[str]] = {}
     ) -> bool:
-        """Determine whether the Flake8Error should be ignored based on the provided ignore lists.
+        """Determine whether to ignore Flake8Error based on the provided ignore lists.
 
         Args:
-            ignore (list[str], optional): A list of codes to be ignored globally. Defaults to [].
-            per_file_ignores (dict[str, list[str]], optional): A dictionary mapping filenames to lists of
-                                                               codes to ignore for those specific files.
-                                                               Defaults to {}.
+            ignore (list[str], optional): A list of codes to be ignored globally.
+                Defaults to [].
+            per_file_ignores (dict[str, list[str]], optional): A dictionary mapping
+                filenames to lists of codes to ignore for those specific files.
+                Defaults to {}.
 
         Returns:
             bool: True if the error should be ignored, False otherwise.
