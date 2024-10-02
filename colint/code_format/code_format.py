@@ -27,7 +27,7 @@ def __get_black_mode(params: BlackParams) -> Mode:
 
 
 def __style_black_message(fname: str | Path, only_check: bool) -> str:
-    """Styles a message indicating whether a file would have been or has been reformatted.
+    """Styles a message, indicate if a file would have been or has been reformatted.
 
     Args:
         fname (str | Path): The file name.
@@ -57,7 +57,8 @@ def format_notebook(nb_path: str | Path, only_check: bool, mode: Mode) -> bool:
 
     Args:
         nb_path (str | Path): The path to the Jupyter notebook file.
-        only_check (bool): Whether to only check for formatting changes or to apply them.
+        only_check (bool): Whether to only check for formatting changes
+            or to apply them.
         mode (Mode): The Black formatter mode to use.
 
     Returns:
@@ -82,7 +83,8 @@ def format_script(input_path: str | Path, only_check: bool, mode: Mode) -> bool:
 
     Args:
         input_path (str | Path): The path to the Python script file.
-        only_check (bool): Whether to only check for formatting changes or to apply them.
+        only_check (bool): Whether to only check for formatting changes
+            or to apply them.
         mode (Mode): The Black formatter mode to use.
 
     Returns:
@@ -97,11 +99,11 @@ def format_script(input_path: str | Path, only_check: bool, mode: Mode) -> bool:
 
 
 def format_code(path: str, only_check: bool, params: BlackParams) -> bool:
-    """Format the code in Python scripts and Jupyter notebooks within the given path using Black.
+    """Format the code in .py and .ipynb within the given path using Black.
 
     Args:
         path (str): The root directory path to search for files.
-        only_check (bool): Whether to only check for formatting changes or to apply them.
+        only_check (bool): Whether to only check or to apply for formatting changes.
         params (BlackParams): Parameters for configuring the Black formatter.
 
     Returns:

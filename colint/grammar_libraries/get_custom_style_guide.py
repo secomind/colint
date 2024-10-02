@@ -14,10 +14,12 @@ def get_custom_style_guide(params: Flake8Params):
         params (Flake8Params): The parameters to customize the style guide.
 
     Returns:
-        flake8.api.legacy.StyleGuide: A custom StyleGuide configured with the given parameters.
+        flake8.api.legacy.StyleGuide: A custom StyleGuide configured
+            with the given parameters.
 
     Raises:
-        Exception: If an option present in params is not valid for the flake8 configuration.
+        Exception: If an option present in params is not valid
+            for the flake8 configuration.
     """
     params_dict = asdict(params)
     flake8_app = app.Application()
@@ -25,6 +27,7 @@ def get_custom_style_guide(params: Flake8Params):
         [
             f"--max-complexity={params.max_complexity}",
             f"--docstring-convention={params.docstring_convention}",
+            f"--max-doc-length={params.max_doc_length}",
         ]
     )
     options = flake8_app.options

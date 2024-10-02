@@ -16,8 +16,10 @@ def __report_to_errors(
     """Convert a flake8 report to a list of Flake8Error objects.
 
     Args:
-        report (list[tuple]): A list of tuples representing flake8 errors; returned by flake8.
-        replace_fname (str | None, optional): Filename to replace the original in the errors. Defaults to None.
+        report (list[tuple]): A list of tuples representing flake8 errors;
+            returned by flake8.
+        replace_fname (str | None, optional): Filename to replace
+            the original in the errors. Defaults to None.
 
     Returns:
         list[Flake8Error]: A list of Flake8Error objects.
@@ -30,14 +32,18 @@ def __report_to_errors(
 
 
 def __find_min_index(nums, target):
-    """Find the minimum index in a list where the running sum of elements is greater than or equal to the target.
+    """Find the minimum index in a list.
+
+    Find the minimum index in a list where the running sum of elements
+    is greater than or equal to the target.
 
     Args:
         nums (list[int]): A list of integers.
         target (int): The target sum.
 
     Returns:
-        int: The index where the running sum first exceeds or meets the target, or -1 if not found.
+        int: The index where the running sum first exceeds or meets the target,
+            or -1 if not found.
     """
     running_sum = 0
     for index, num in enumerate(nums):

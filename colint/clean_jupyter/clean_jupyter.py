@@ -10,7 +10,9 @@ def __style_text(fname: str | Path, only_check: bool) -> str:
 
     Args:
         fname (str | Path): The name or path of the file.
-        only_check (bool): If True, returns a message indicating the file hasn't been cleared of outputs. Otherwise, indicates the file has been cleared.
+        only_check (bool): If True, returns a message indicating the file
+            hasn't been cleared of outputs. Otherwise, indicates the file
+            has been cleared.
 
     Returns:
         str: A styled string indicating the status of the file's outputs.
@@ -27,10 +29,12 @@ def __clean_notebook(fname: str | Path, only_check: bool) -> bool:
 
     Args:
         fname (str | Path): The name or path of the Jupyter notebook file.
-        only_check (bool): If True, only checks for outputs without clearing them. If False, clears the outputs.
+        only_check (bool): If True, only checks for outputs without clearing them.
+            If False, clears the outputs.
 
     Returns:
-        bool: True if the notebook had outputs that were checked or cleared, False otherwise.
+        bool: True if the notebook had outputs that were checked or cleared,
+            False otherwise.
     """
     nb = JupyterNotebokParser(fname)
     modifications = False
@@ -46,14 +50,16 @@ def __clean_notebook(fname: str | Path, only_check: bool) -> bool:
 
 
 def jupyter_clean(path: str, only_check: bool) -> bool:
-    """Clean outputs from all Jupyter notebooks in a directory or check if they have outputs.
+    """Clean outputs from all Jupyter notebooks in a directory or check outputs.
 
     Args:
         path (str): The directory path to search for Jupyter notebooks.
-        only_check (bool): If True, only checks for outputs without clearing them. If False, clears the outputs.
+        only_check (bool): If True, only checks for outputs without clearing them.
+            If False, clears the outputs.
 
     Returns:
-        bool: True if any notebooks had outputs that were checked or cleared, False otherwise.
+        bool: True if any notebooks had outputs that were checked or cleared,
+            False otherwise.
     """
     files = get_valid_files(path)
     notebooks = [fname for fname in files if fname.endswith(".ipynb")]

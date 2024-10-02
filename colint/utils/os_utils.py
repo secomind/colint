@@ -16,7 +16,8 @@ def get_git_repo(path: str) -> git.Repo | None:
         None: If the path is not a valid Git repository.
     """
     try:
-        # Try to return the git repository object, searching in parent directories as well
+        # Try to return the git repository object,
+        # searching in parent directories as well
         repo = git.Repo(path, search_parent_directories=True)
         return repo
     except git.exc.InvalidGitRepositoryError:
@@ -45,7 +46,8 @@ def get_valid_files(path: str | Path) -> list[str]:
         raise NotValidPath(f"Path {path} is not a valid directory.")
 
     repo = get_git_repo(path)
-    # Get all files in the directory recursively, excluding any files in the '.git' directory
+    # Get all files in the directory recursively,
+    # excluding any files in the '.git' directory
     files = [
         str(f) for f in Path(path).rglob("*") if f.is_file() and ".git" not in f.parts
     ]

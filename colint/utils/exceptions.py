@@ -1,10 +1,21 @@
 class NotValidPath(Exception):
-    """Custom error when the provided path is not a directory or a file."""
+    """Not valid path.
+
+    Custom error when the provided path is not a directory or a file.
+    """
 
 
 class InvalidJupyterCellData(Exception):
-    """Custom error raised when an invalid cell JSON is used to initialize JupyterCell class."""
+    """Invalid Jupyter cell data.
+
+    Custom error raised when an invalid cell JSON
+    is used to initialize JupyterCell class.
+    """
 
 
 class InvalidJupyterNotebookData(Exception):
-    """Custom error raise when an invalid Jupyter Notebook JSON is used to initialize JupyterNoebookParser class."""
+    """Invalid Jupyter notebook data.
+
+    Custom error raise when an invalid Jupyter Notebook JSON
+    is used to initialize JupyterNoebookParser class.
+    """

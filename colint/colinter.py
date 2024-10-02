@@ -27,9 +27,15 @@ def perform_operation(key: str, path: str, only_check: bool) -> bool:
 
     Args:
         key (str): The command specifying the operation to perform.
-                   Must be one of the following:
-                   ['sort-libraries', 'code-format', 'grammar-check', 'newline-fix', 'clean-jupyter'].
-        path (str): The path to the directory or file on which to perform the operation.
+            Must be one of the following:
+            [
+                'sort-libraries',
+                'code-format',
+                'grammar-check',
+                'newline-fix',
+                'clean-jupyter',
+            ].
+        path (str): The path to the directory or file to perform the operation on.
         only_check (bool): If True, performs a check without modifying the files.
 
     Returns:

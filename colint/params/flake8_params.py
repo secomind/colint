@@ -8,8 +8,10 @@ class Flake8Params:
     """A data class to represent Flake8 configuration parameters.
 
     Attributes:
-        per_file_ignores (dict[str, list[str]]): A dictionary to specify errors to ignore for specific files.
-        extend_ignore (list[str]): A list of error codes to extend the default ignore list.
+        per_file_ignores (dict[str, list[str]]): A dictionary to specify errors
+            to ignore for specific files.
+        extend_ignore (list[str]): A list of error codes to extend
+            the default ignore list.
         max_complexity (int): The maximum allowed complexity for the code.
         quiet (int): The quiet level for Flake8 (controls verbosity).
     """
@@ -19,6 +21,7 @@ class Flake8Params:
     max_complexity: int = -1
     quiet: int = 2
     docstring_convention: str = "pep257"
+    max_doc_length: int = 88
 
     @staticmethod
     def __safe_get_integer(obj: dict, key: str, default_value: int) -> int:
@@ -55,7 +58,8 @@ class Flake8Params:
             Flake8Params: An instance of Flake8Params.
 
         Raises:
-            InvalidFlake8PerFileIgnore: If the per-file-ignore property is improperly formatted.
+            InvalidFlake8PerFileIgnore: If the per-file-ignore property
+                is improperly formatted.
         """
         per_file_ignores_string = obj.get("per-file-ignores")
         if not isinstance(per_file_ignores_string, str):
@@ -79,10 +83,13 @@ class Flake8Params:
 
         docstring_convention = obj.get("docstring-convention", "pep257")
 
+        max_doc_length = Flake8Params.__safe_get_integer(obj, "max-doc-length", 88)
+
         return Flake8Params(
             per_file_ignores=per_file_ignores,
             extend_ignore=extend_ignore,
             max_complexity=max_complexity,
             quiet=quiet,
             docstring_convention=docstring_convention,
+            max_doc_length=max_doc_length,
         )
