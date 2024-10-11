@@ -1,0 +1,81 @@
+name: Cobra Lint Checks
+
+on: [pull_request, push]
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        
+      - name: Set up Python
+        id: python-path
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10.12'
+          
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install git+ssh://git@github.com/secomind/colint.git
+
+  sort_libraries:
+    runs-on: ubuntu-latest
+    needs: setup
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Run Sort Libraries Check
+        run: |
+          colint sort-libraries ./ --check
+  
+  code_format:
+    runs-on: ubuntu-latest
+    needs: setup
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Run Code Format Check
+        run: |
+          colint code-format ./ --check
+
+  grammar_check:
+    runs-on: ubuntu-latest
+    needs: setup
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Run Grammar Check
+        run: |
+          colint grammar-check ./ --check
+
+  newline_fix:
+    runs-on: ubuntu-latest
+    needs: setup
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Run Newline Fix Check
+        run: |
+          colint newline-fix ./ --check
+
+  clean_jupyter:
+    runs-on: ubuntu-latest
+    needs: setup
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Check Jupyter Notebooks Cleanliness
+        run: |
+          colint clean-jupyter ./ --check
