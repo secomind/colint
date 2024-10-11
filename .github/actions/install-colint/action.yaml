@@ -1,0 +1,16 @@
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+        
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10.12'
+          
+    - name: Install colint from github repository
+      shell: bash
+      run: |
+        pip install --upgrade pip
+        pip install git+https://github.com/secomind/colint.git
