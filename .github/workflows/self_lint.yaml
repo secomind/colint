@@ -1,0 +1,74 @@
+name: Cobra Lint Checks
+
+on: [pull_request, push]
+
+jobs:
+  sort_libraries:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Colint
+        uses: ./.github/actions/install-colint
+
+      - name: Run Sort Libraries Check
+        run: |
+          colint sort-libraries ./ --check
+  
+  code_format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      
+      - name: Install Colint
+        uses: ./.github/actions/install-colint
+
+      - name: Run Code Format Check
+        run: |
+          colint code-format ./ --check
+
+  grammar_check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Colint
+        uses: ./.github/actions/install-colint
+
+      - name: Run Grammar Check
+        run: |
+          colint grammar-check ./ --check
+
+  newline_fix:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      
+      - name: Install Colint
+        uses: ./.github/actions/install-colint
+
+      - name: Run Newline Fix Check
+        run: |
+          colint newline-fix ./ --check
+
+  clean_jupyter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Colint
+        uses: ./.github/actions/install-colint
+
+      - name: Check Jupyter Notebooks Cleanliness
+        run: |
+          colint clean-jupyter ./ --check
