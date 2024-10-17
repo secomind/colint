@@ -4,6 +4,7 @@ from pathlib import Path
 
 from .clean_jupyter.clean_jupyter import jupyter_clean
 from .code_format.code_format import format_code
+from .docformat.docformat import docformat
 from .grammar_libraries.grammar_check import code_check
 from .newline_fix.newline_fix import newline_fix
 from .params.params import Params
@@ -63,12 +64,6 @@ def main():
 
     This function serves as the starting point for the script.
     It initializes the process and coordinates the overall workflow.
-
-    Args:
-        None
-
-    Returns:
-        None
     """
     arg_parser = argparse.ArgumentParser(
         description="Handles various commands related to directories and notebooks.",
@@ -86,6 +81,7 @@ def main():
             "  - newline-fix: Fixes newline inconsistencies in the files.\n"
             "  - clean-jupyter: Cleans Jupyter notebook files by removing unnecessary metadata and outputs.\n"
             '  - lint: Performs all the operations above, but "clean-jupyter". To also use "clean-jupyter" use the --clean-notebooks flag.'
+            "  - docformat: performs an **experimental** docformatting over a file. NOTE: it only works on a single file."
         ),
     )
     arg_parser.add_argument(
@@ -120,6 +116,14 @@ def main():
     if not lint_dir.is_dir() and not lint_dir.is_file():
         print(f"Error: Path to directory '{lint_dir}' is not valid.")
         sys.exit(1)
+
+    if command == "docformat" and not lint_dir.is_file():
+        print("Error! docformat only works on a single file.")
+        sys.exit(1)
+
+    if command == "docformat":
+        docformat(lint_dir, params.black)
+        sys.exit(0)
 
     if command != "lint":
         res = perform_operation(command, str(lint_dir.resolve()), only_check)
