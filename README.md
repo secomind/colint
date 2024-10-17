@@ -73,6 +73,8 @@ usage: colint [-h] [--check] [--clean-notebooks]
   - `newline-fix`: Fixes newline inconsistencies in the files.
   - `clean-jupyter`: Cleans Jupyter notebook files by removing unnecessary metadata and outputs.
   - `lint`: Performs all the above operations except `clean-jupyter`. To include `clean-jupyter`, use the `--clean-notebooks` flag.
+  - `docformat`: **Experimental** Formats docstrings and commented lines to adhere to the google docstring standard, breaks lines so that 
+    their length adheres to the style guide. Please read the section "Experimental Commands" before using this.
 
 - `path_to_dir`: Provide the path to the directory that needs linting.
 
@@ -110,6 +112,20 @@ colint lint /path/to/your/project --clean-notebooks
 ```sh
 colint grammar-check /path/to/your/project
 ```
+
+### Experimental Commands
+
+The following commands are right now **experimental** and are not meant to be used in a production environment:
+- `docformat`
+
+**Docformat**
+Formats a document so that it adheres the google (and only google!) docstring standard. It will break lines so that their length is the same as
+the one you have set in the style guide. It will try to "guess" the indentation of each paragraph.
+
+__If there are multiple indentation levels in the same paragraph, it will remove them__
+
+The command will work only on a single file at the time, because you should always check "by hand" the results of the doc-formatting, and you
+__should not take the results as granted__.
 
 ## Contributing
 Contributions are welcome! Please feel free to open issues or submit pull requests.
