@@ -13,129 +13,133 @@ from .sort_libraries.sorter import sort_imports
 config_file = Path(__file__).parent / "pyproject.toml"
 params = Params.from_toml(config_file)
 
-COMMANDS = [
+COMMANDS = {
     "clean-jupyter",
     "code-format",
     "grammar-check",
     "lint",
     "newline-fix",
     "sort-libraries",
-]
+    "docformat",
+}
 
 
-def perform_operation(key: str, path: str, only_check: bool) -> bool:
+def get_operations():
+    """Get mapping of operations to their implementation functions."""
+    return {
+        "clean-jupyter": lambda p, c: jupyter_clean(p, c),
+        "code-format": lambda p, c: format_code(p, c, params.black),
+        "grammar-check": lambda p, c: code_check(p, params.flake8),
+        "newline-fix": lambda p, c: newline_fix(p, c),
+        "sort-libraries": lambda p, c: sort_imports(p, c, params.isort),
+    }
+
+
+def perform_operation(key: str, path: Path, only_check: bool) -> bool:
     """Perform a specified operation on a given directory or file path.
 
     Args:
-        key (str): The command specifying the operation to perform.
-            Must be one of the following:
-            [
-                'sort-libraries',
-                'code-format',
-                'grammar-check',
-                'newline-fix',
-                'clean-jupyter',
-            ].
-        path (str): The path to the directory or file to perform the operation on.
-        only_check (bool): If True, performs a check without modifying the files.
+        key: The command specifying the operation to perform
+        path: The path to the directory or file
+        only_check: If True, performs a check without modifying files
 
     Returns:
-        bool: True if the operation is performed successfully, False otherwise.
+        bool: True if any issues were found, False if clean
 
     Raises:
-        KeyError: If the provided key is not in COMMANDS or is 'lint'.
+        KeyError: If the provided key is not a valid command
     """
-    if key not in COMMANDS or key == "lint":
-        raise KeyError(f'Cannot perform operation "{key}".')
-    if key == "clean-jupyter":
-        return jupyter_clean(path, only_check)
-    if key == "code-format":
-        return format_code(path, only_check, params.black)
-    if key == "grammar-check":
-        return code_check(path, params.flake8)
-    if key == "newline-fix":
-        return newline_fix(path, only_check)
-    assert key == "sort-libraries"
-    return sort_imports(path, only_check, params.isort)
+    operations = get_operations()
+    if key not in operations:
+        raise KeyError(f'Invalid operation "{key}"')
+    return operations[key](str(path.resolve()), only_check)
+
+
+def validate_path(path: Path, command: str) -> None:
+    """Validate the provided path based on command requirements."""
+    if not path.exists():
+        print(f"Error: Path '{path}' does not exist.")
+        sys.exit(1)
+
+    if command == "docformat" and not path.is_file():
+        print("Error: docformat only works on a single file.")
+        sys.exit(1)
+
+
+def get_lint_commands(clean_notebooks: bool):
+    """Get the list of commands to run during lint operation."""
+    commands = ["sort-libraries", "code-format", "grammar-check", "newline-fix"]
+    if clean_notebooks:
+        commands = ["clean-jupyter"] + commands
+    return commands
+
+
+def run_tool(args: argparse.Namespace) -> None:
+    """Execute the linting tool with provided arguments."""
+    path = Path(args.path_to_dir)
+    validate_path(path, args.command)
+
+    if args.command == "docformat":
+        docformat(path, params.black)
+        sys.exit(0)
+
+    if args.command != "lint":
+        result = perform_operation(args.command, path, args.check)
+        sys.exit(1 if result else 0)
+
+    has_issues = False
+    for cmd in get_lint_commands(args.clean_notebooks):
+        try:
+            cmd_result = perform_operation(cmd, path, args.check)
+            has_issues = has_issues or cmd_result
+        except Exception as e:
+            print(f"Error during {cmd}: {str(e)}")
+            has_issues = True
+
+    sys.exit(1 if has_issues else 0)
 
 
 def main():
-    """Run the main entry point of the application.
-
-    This function serves as the starting point for the script.
-    It initializes the process and coordinates the overall workflow.
-    """
-    arg_parser = argparse.ArgumentParser(
-        description="Handles various commands related to directories and notebooks.",
+    """Main entry point for the linting tool."""
+    parser = argparse.ArgumentParser(
+        description="Code linting and formatting tool",
         formatter_class=argparse.RawTextHelpFormatter,
     )
 
-    arg_parser.add_argument(
+    parser.add_argument(
         "command",
         choices=COMMANDS,
         help=(
-            "Specify the command to execute. Options are:\n"
-            "  - sort-libraries: Sorts and organizes the library imports.\n"
-            "  - code-format: Formats the code according to defined style guides.\n"
-            "  - grammar-check: Checks for and corrects grammatical/styling errors in code and docstrings.\n"
-            "  - newline-fix: Fixes newline inconsistencies in the files.\n"
-            "  - clean-jupyter: Cleans Jupyter notebook files by removing unnecessary metadata and outputs.\n"
-            '  - lint: Performs all the operations above, but "clean-jupyter". To also use "clean-jupyter" use the --clean-notebooks flag.'
-            "  - docformat: performs an **experimental** docformatting over a file. NOTE: it only works on a single file."
+            "Available commands:\n"
+            "  - sort-libraries: Sort and organize imports\n"
+            "  - code-format: Format code according to style guides\n"
+            "  - grammar-check: Check code and docstring style\n"
+            "  - newline-fix: Fix newline inconsistencies\n"
+            "  - clean-jupyter: Clean Jupyter notebooks\n"
+            "  - lint: Run all checks except clean-jupyter\n"
+            "  - docformat: Experimental docstring formatting (single file only)"
         ),
     )
-    arg_parser.add_argument(
-        "path_to_dir", help="Provide the path to the directory that needs linting."
+
+    parser.add_argument(
+        "path_to_dir",
+        help="Path to target directory or file",
     )
 
-    arg_parser.add_argument(
+    parser.add_argument(
         "--check",
         action="store_true",
-        help=(
-            "Enable check mode.\n"
-            "In this mode, linting will not modify files; it will only check for issues."
-        ),
+        help="Check for issues without modifying files",
     )
-    arg_parser.add_argument(
+
+    parser.add_argument(
         "--clean-notebooks",
         action="store_true",
-        help=(
-            "Enable clean-notebooks mode.\n"
-            'If "lint" command is selected, this adds a procedure to clean jupyter notebooks.\n'
-            "If another command is used, it has no effect."
-        ),
+        help="Include notebook cleaning in lint command",
     )
 
-    args = arg_parser.parse_args()
-
-    command = args.command
-    lint_dir = Path(args.path_to_dir)
-    only_check = args.check
-    clean_notebooks = args.clean_notebooks
-
-    if not lint_dir.is_dir() and not lint_dir.is_file():
-        print(f"Error: Path to directory '{lint_dir}' is not valid.")
-        sys.exit(1)
-
-    if command == "docformat" and not lint_dir.is_file():
-        print("Error! docformat only works on a single file.")
-        sys.exit(1)
-
-    if command == "docformat":
-        docformat(lint_dir, params.black)
-        sys.exit(0)
-
-    if command != "lint":
-        res = perform_operation(command, str(lint_dir.resolve()), only_check)
-        sys.exit(res)
-
-    commands_to_perform = [
-        c for c in COMMANDS if c != "lint" and (c != "clean-jupyter" or clean_notebooks)
-    ]
-    res = False
-    for c in commands_to_perform:
-        res |= perform_operation(c, lint_dir, only_check)
-    sys.exit(res)
+    args = parser.parse_args()
+    run_tool(args)
 
 
 if __name__ == "__main__":
