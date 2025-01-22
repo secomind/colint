@@ -23,12 +23,11 @@ def __find_commented_lines(script: str) -> set[int]:
 
 
 def __format_commented_line(line: str, line_length: int) -> str:
-    """Format a commented line and optionally justifying its content.
+    """Format a commented line .
 
     Args:
         line (str): The original commented line to be formatted.
         line_length (int): The desired maximum line length for formatting.
-        justify (bool): Whether or not to justify the content of the line.
 
     Returns:
         str: The reformatted commented line.
@@ -43,7 +42,6 @@ def __format_commented_line(line: str, line_length: int) -> str:
         text=line_content,
         prefix=" " * indent_level * 4 + "# ",
         line_length=line_length,
-        justify=False,
     )
     return "\n".join(formatted_lines)
 
