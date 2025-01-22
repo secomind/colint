@@ -30,7 +30,18 @@ def __should_add_indent(node: ast.AST) -> bool:
     """
     return isinstance(
         node,
-        (ast.FunctionDef, ast.ClassDef, ast.For, ast.If, ast.While, ast.With, ast.Try),
+        (
+            ast.AsyncFor,
+            ast.AsyncFunctionDef,
+            ast.AsyncWith,
+            ast.ClassDef,
+            ast.For,
+            ast.FunctionDef,
+            ast.If,
+            ast.Try,
+            ast.While,
+            ast.With,
+        ),
     )
 
 
