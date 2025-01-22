@@ -182,7 +182,7 @@ def __single_line_docstring(
 
 
 def apply_google_style(
-    lines: list[str], indentation_level: int, line_length: int, justify: bool
+    lines: list[str], indentation_level: int, line_length: int
 ) -> list[str]:
     """Applies Google-style formatting to the given docstring lines.
 
@@ -190,7 +190,6 @@ def apply_google_style(
         lines (list[str]): The raw lines of the docstring to format.
         indentation_level (int): The level of indentation (4 spaces per level).
         line_length (int): The maximum length of each line.
-        justify (bool): Whether to justify the text or not.
 
     Returns:
         list[str]: A   list   of   formatted   docstring  lines  following  Google-style
@@ -212,7 +211,6 @@ def apply_google_style(
                 text="\n".join(section.lines),
                 prefix=normal_indent,
                 line_length=line_length,
-                justify=justify,
             )
             result.append("")
             continue
@@ -221,7 +219,6 @@ def apply_google_style(
             text="\n".join(section.lines),
             prefix=first_indent,
             line_length=line_length,
-            justify=justify,
         )
         for element in section.list_elements:
             element_text = "\n".join(element.lines)
@@ -229,7 +226,6 @@ def apply_google_style(
                 text=element_text,
                 prefix=first_indent + element.heading + " ",
                 line_length=line_length,
-                justify=justify,
             )[0]
             result.append(first_line)
             words = first_line.strip()[len(element.heading) :].split()
@@ -239,7 +235,6 @@ def apply_google_style(
                 text=text_remaining,
                 prefix=second_indent,
                 line_length=line_length,
-                justify=justify,
             )
             result += other_lines
         result.append("")
