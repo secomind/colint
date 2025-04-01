@@ -20,6 +20,7 @@ COMMANDS = [
     "lint",
     "newline-fix",
     "sort-libraries",
+    "docformat",
 ]
 
 
@@ -80,8 +81,8 @@ def main():
             "  - grammar-check: Checks for and corrects grammatical/styling errors in code and docstrings.\n"
             "  - newline-fix: Fixes newline inconsistencies in the files.\n"
             "  - clean-jupyter: Cleans Jupyter notebook files by removing unnecessary metadata and outputs.\n"
-            '  - lint: Performs all the operations above, but "clean-jupyter". To also use "clean-jupyter" use the --clean-notebooks flag.'
-            "  - docformat: performs an **experimental** docformatting over a file. NOTE: it only works on a single file."
+            "  - lint: Performs all the operations above, but 'clean-jupyter'. To also use 'clean-jupyter' use the --clean-notebooks flag.\n"
+            "  - docformat: performs an **experimental** docformatting over a file. NOTE: it only works on a single file.\n"
         ),
     )
     arg_parser.add_argument(
@@ -130,7 +131,11 @@ def main():
         sys.exit(res)
 
     commands_to_perform = [
-        c for c in COMMANDS if c != "lint" and (c != "clean-jupyter" or clean_notebooks)
+        c
+        for c in COMMANDS
+        if c != "lint"
+        and (c != "clean-jupyter" or clean_notebooks)
+        and c != "docformat"
     ]
     res = False
     for c in commands_to_perform:
