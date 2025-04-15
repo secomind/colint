@@ -1,11 +1,12 @@
 import io
+import os
 from pathlib import Path
 
 import isort
 
 from ..params.isort_params import IsortParams
 from ..utils.jupyter_utils import JupyterNotebokParser
-from ..utils.os_utils import get_valid_files
+from ..utils.os_utils import get_git_repo, get_valid_files
 from ..utils.text_styling_utils import TextModifiers, style_text
 
 FILE_SORTED_MESSAGE = "! File has been sorted: "
@@ -89,6 +90,12 @@ def sort_imports(path: str, only_check: bool, params: IsortParams) -> bool:
         bool: Boolean indicating if any imports have been sorted in any file.
     """
     files = get_valid_files(path)
+    git_repo = get_git_repo(path)
+    current_directory = os.getcwd()
+
+    if git_repo is not None:
+        new_dir = Path(git_repo.git_dir).parent.absolute()
+        os.chdir(str(new_dir))
 
     some_file_has_been_sorted = False
 
@@ -124,5 +131,8 @@ def sort_imports(path: str, only_check: bool, params: IsortParams) -> bool:
         some_file_has_been_sorted = some_file_has_been_sorted or file_not_linted
         if file_not_linted:
             print(__style_message(f, only_check))
+
+    if os.getcwd() != current_directory:
+        os.chdir(current_directory)
 
     return some_file_has_been_sorted
