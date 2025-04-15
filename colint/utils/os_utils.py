@@ -52,8 +52,12 @@ def get_valid_files(path: str | Path) -> list[str]:
         str(f) for f in Path(path).rglob("*") if f.is_file() and ".git" not in f.parts
     ]
 
-    if repo:  # If a git repository exists, remove files in gitignore
-        repo_ignore = set(repo.ignored(files))
-        files = list(set(files).difference(repo_ignore))
+    valid_files = set(files)
 
-    return sorted(files)
+    if repo:  # If a git repository exists, remove files in gitignore
+        batch_size = 100
+        for k in range(0, len(files), batch_size):
+            repo_ignore = set(repo.ignored(files[k : k + batch_size]))
+            valid_files.difference_update(repo_ignore)
+
+    return sorted(list(valid_files))
