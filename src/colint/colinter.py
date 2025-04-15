@@ -10,7 +10,7 @@ from .newline_fix.newline_fix import newline_fix
 from .params.params import Params
 from .sort_libraries.sorter import sort_imports
 
-config_file = Path(__file__).parent / "pyproject.toml"
+config_file = Path(__file__).parent / "config.toml"
 params = Params.from_toml(config_file)
 
 COMMANDS = {
