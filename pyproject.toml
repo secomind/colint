@@ -8,6 +8,7 @@ version = "0.2"
 description = ""
 authors = [
     { name = "Davide Colì", email = "davide.coli@secomind.com" },
+    { name = "Michele Puppin", email = "michele.puppin@secomind.com" }
 ]
 readme = "README.md"
 requires-python = ">=3.10"
