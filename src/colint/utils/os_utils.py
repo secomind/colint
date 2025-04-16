@@ -55,7 +55,7 @@ def get_valid_files(path: str | Path) -> list[str]:
     valid_files = set(files)
 
     if repo:  # If a git repository exists, remove files in gitignore
-        batch_size = 100
+        batch_size = 30000
         for k in range(0, len(files), batch_size):
             repo_ignore = set(repo.ignored(files[k : k + batch_size]))
             valid_files.difference_update(repo_ignore)
