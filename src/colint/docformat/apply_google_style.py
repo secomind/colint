@@ -47,17 +47,20 @@ class Section:
 
 __google_docs_section_keys = [
     "Args",
-    "Returns",
-    "Raises",
     "Attributes",
-    "Yields",
-    "Examples",
-    "See Also",
-    "Notes",
-    "Warnings",
-    "References",
     "Deprecated",
+    "Examples",
+    "Methods",
+    "Notes",
+    "Overridden",
+    "Properties",
+    "Raises",
+    "References",
+    "Returns",
+    "See Also",
     "TODO",
+    "Warnings",
+    "Yields",
 ]
 
 __google_docs_section_patterns = [
