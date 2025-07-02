@@ -9,6 +9,7 @@ from .grammar_libraries.grammar_check import code_check
 from .newline_fix.newline_fix import newline_fix
 from .params.params import Params
 from .sort_libraries.sorter import sort_imports
+from .utils.versioning import get_versioning
 
 config_file = Path(__file__).parent / "config.toml"
 params = Params.from_toml(config_file)
@@ -136,6 +137,13 @@ def main():
         "--clean-notebooks",
         action="store_true",
         help="Include notebook cleaning in lint command",
+    )
+
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=get_versioning(),
+        help="Show program's version number and exit.",
     )
 
     args = parser.parse_args()
