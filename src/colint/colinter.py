@@ -11,8 +11,7 @@ from .params.params import Params
 from .sort_libraries.sorter import sort_imports
 from .utils.versioning import get_versioning
 
-config_file = Path(__file__).parent / "config.toml"
-params = Params.from_toml(config_file)
+default_config_file = Path(__file__).parent / "config.toml"
 
 COMMANDS = {
     "clean-jupyter",
@@ -25,7 +24,7 @@ COMMANDS = {
 }
 
 
-def get_operations():
+def get_operations(params: Params):
     """Get mapping of operations to their implementation functions."""
     return {
         "clean-jupyter": lambda p, c: jupyter_clean(p, c),
@@ -36,13 +35,14 @@ def get_operations():
     }
 
 
-def perform_operation(key: str, path: Path, only_check: bool) -> bool:
+def perform_operation(key: str, path: Path, only_check: bool, params: Params) -> bool:
     """Perform a specified operation on a given directory or file path.
 
     Args:
         key: The command specifying the operation to perform
         path: The path to the directory or file
         only_check: If True, performs a check without modifying files
+        params: The linting parameters.
 
     Returns:
         bool: True if any issues were found, False if clean
@@ -50,7 +50,7 @@ def perform_operation(key: str, path: Path, only_check: bool) -> bool:
     Raises:
         KeyError: If the provided key is not a valid command
     """
-    operations = get_operations()
+    operations = get_operations(params)
     if key not in operations:
         raise KeyError(f'Invalid operation "{key}"')
     return operations[key](str(path.resolve()), only_check)
@@ -77,6 +77,15 @@ def get_lint_commands(clean_notebooks: bool):
 
 def run_tool(args: argparse.Namespace) -> None:
     """Execute the linting tool with provided arguments."""
+    config_file = args.config_file
+    config_file = default_config_file if config_file is None else Path(config_file)
+    try:
+        params = Params.from_toml(config_file)
+    except Exception as e:
+        print("Error while loading config file.")
+        print(e)
+        sys.exit(1)
+
     path = Path(args.path_to_dir)
     validate_path(path, args.command)
 
@@ -85,13 +94,13 @@ def run_tool(args: argparse.Namespace) -> None:
         sys.exit(0)
 
     if args.command != "lint":
-        result = perform_operation(args.command, path, args.check)
+        result = perform_operation(args.command, path, args.check, params=params)
         sys.exit(1 if result else 0)
 
     has_issues = False
     for cmd in get_lint_commands(args.clean_notebooks):
         try:
-            cmd_result = perform_operation(cmd, path, args.check)
+            cmd_result = perform_operation(cmd, path, args.check, params=params)
             has_issues = has_issues or cmd_result
         except Exception as e:
             print(f"Error during {cmd}: {str(e)}")
@@ -123,6 +132,13 @@ def main():
     )
 
     parser.add_argument(
+        "--config-file",
+        type=str,
+        default=None,
+        help="Colint configuration file (optional). If not set, it will use default configurations.",
+    )
+
+    parser.add_argument(
         "path_to_dir",
         help="Path to target directory or file",
     )
@@ -147,6 +163,7 @@ def main():
     )
 
     args = parser.parse_args()
+
     run_tool(args)
 
 
