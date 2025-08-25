@@ -48,16 +48,23 @@ def get_valid_files(path: str | Path) -> list[str]:
     repo = get_git_repo(path)
     # Get all files in the directory recursively,
     # excluding any files in the '.git' directory
-    files = [
-        str(f) for f in Path(path).rglob("*") if f.is_file() and ".git" not in f.parts
-    ]
+    all_files_path = set(
+        f for f in Path(path).rglob("*") if f.is_file() and ".git" not in f.parts
+    )
 
-    valid_files = set(files)
+    parent_directories = list(set(str(f.parent) for f in all_files_path))
+    if repo:
+        ignored_directories = set(repo.ignored(parent_directories))
+    else:
+        ignored_directories = set()
+    possible_files = [
+        str(f) for f in all_files_path if str(f.parent) not in ignored_directories
+    ]
+    valid_files = set(possible_files)
 
     if repo:  # If a git repository exists, remove files in gitignore
-        batch_size = 30000
-        for k in range(0, len(files), batch_size):
-            repo_ignore = set(repo.ignored(files[k : k + batch_size]))
+        batch_size = 1_000
+        for k in range(0, len(possible_files), batch_size):
+            repo_ignore = set(repo.ignored(possible_files[k : k + batch_size]))
             valid_files.difference_update(repo_ignore)
-
     return sorted(list(valid_files))
