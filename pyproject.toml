@@ -8,21 +8,21 @@ version = "0.2.1"
 description = ""
 authors = [
     { name = "Davide Colì", email = "davide.coli@secomind.com" },
-    { name = "Michele Puppin", email = "michele.puppin@secomind.com" }
+    { name = "Michele Puppin", email = "michele.puppin@secomind.com" },
+    { name = "Giulia Fontanella", email = "giulia.fontanella@secomind.com"},
+    { name = "Mattia Baro", email="mattia.baro@secomind.com"}
 ]
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "black==25.11.0",
-    "exceptiongroup==1.2.2",
     "flake8-docstrings==1.7.0",
-    "GitPython==3.1.43",
-    "ipykernel==6.29.5",
+    "GitPython>=3.1.43",
+    "ipykernel>=6.0.0",
     "isort==7.0.0",
-    "tokenize-rt==6.0.0",
-    "toml==0.10.2",
-    "tomli==2.0.1",
-    "typing-extensions==4.12.2",
+    "tokenize-rt>=6.0.0,<7.0.0",
+    "toml>=0.10.2",
+    "tomli>=2.0.1",
 ]
 
 [project.scripts]
